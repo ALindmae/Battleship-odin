@@ -32,9 +32,9 @@ export class Gameboard {
 
     for (let i = 0; i < shipLength; i++) {
       if (direction === PLACEMENT_DIRECTIONS.horizontal) {
-        this.#board[row][column + i] = ship;
+        this.#board[row][column + i].ship = ship;
       } else {
-        this.#board[row + i][column] = ship;
+        this.#board[row + i][column].ship = ship;
       }
     }
 
@@ -46,7 +46,7 @@ export class Gameboard {
     for (let i = 0; i < BOARD_SIZE.rows; i++) {
       board[i] = [];
       for (let j = 0; j < BOARD_SIZE.columns; j++) {
-        board[i][j] = null;
+        board[i][j] = { ship: null, attacked: false };
       }
     }
     return board;
@@ -67,13 +67,13 @@ export class Gameboard {
       if (direction === PLACEMENT_DIRECTIONS.horizontal) {
         if (
           !this.#isOnBoard([row, column + i]) ||
-          this.#board[row][column + i] instanceof Ship
+          this.#board[row][column + i].ship
         )
           return false;
       } else {
         if (
           !this.#isOnBoard([row + i, column]) ||
-          this.#board[row + i][column] instanceof Ship
+          this.#board[row + i][column].ship
         )
           return false;
       }

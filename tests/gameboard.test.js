@@ -10,13 +10,13 @@ test("ship is placed on the board", () => {
     direction: "horizontal",
   });
   expect(shipPlaced).toBeTruthy();
-  expect(board[0][1]).toBeNull();
-  expect(board[1][0]).toBeNull();
-  expect(board[1][5]).toBeNull();
-  expect(board[1][1]).not.toBeNull();
-  expect(board[1][2]).not.toBeNull();
-  expect(board[1][3]).not.toBeNull();
-  expect(board[1][4]).not.toBeNull();
+  expect(board[0][1].ship).toBeNull();
+  expect(board[1][0].ship).toBeNull();
+  expect(board[1][5].ship).toBeNull();
+  expect(board[1][1].ship).not.toBeNull();
+  expect(board[1][2].ship).not.toBeNull();
+  expect(board[1][3].ship).not.toBeNull();
+  expect(board[1][4].ship).not.toBeNull();
 });
 
 test("ship with coordinates out of the board is not placed", () => {
@@ -44,5 +44,5 @@ test("ship that is placed on coordinates that another ship occupies is not place
     direction: "horizontal",
   });
   expect(shipPlaced).toBeFalsy();
-  expect(board[1][5]).toBeNull();
+  expect(board[1][5].ship).toBeNull();
 });
