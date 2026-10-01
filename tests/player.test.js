@@ -1,4 +1,4 @@
-import { Player } from "../source/player.js";
+import { Player } from "../src/player.js";
 
 test("players have two different boards, one placed ship the other not", () => {
   const realPlayer = new Player();
