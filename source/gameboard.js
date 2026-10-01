@@ -12,8 +12,11 @@ export const PLACEMENT_DIRECTIONS = {
 
 export class Gameboard {
   #board;
+  #ships;
+
   constructor() {
     this.#board = this.#createBoard();
+    this.#ships = [];
   }
 
   get board() {
@@ -37,6 +40,7 @@ export class Gameboard {
         this.#board[row + i][column].ship = ship;
       }
     }
+    this.#ships.push(ship);
 
     return true;
   }
@@ -55,6 +59,15 @@ export class Gameboard {
       return true;
     }
     return false;
+  }
+
+  allShipsSunk() {
+    if (this.#ships.length === 0) return false;
+
+    for (const ship of this.#ships) {
+      if (!ship.isSunk()) return false;
+    }
+    return true;
   }
 
   #createBoard() {

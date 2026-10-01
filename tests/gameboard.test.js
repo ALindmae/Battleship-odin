@@ -56,3 +56,15 @@ test("empty cell displays missed hit", () => {
   expect(gameboard.receiveAttack([1, 6])).toBeFalsy();
   expect(board[1][6].attacked).toBeTruthy();
 });
+
+test("identifies that all ships are not sunk", () => {
+  expect(gameboard.allShipsSunk()).toBeFalsy();
+});
+
+test("identifies that all ships are sunk", () => {
+  gameboard.receiveAttack([1, 1]);
+  gameboard.receiveAttack([1, 2]);
+  gameboard.receiveAttack([1, 3]);
+
+  expect(gameboard.allShipsSunk()).toBeTruthy();
+});
