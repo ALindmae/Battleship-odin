@@ -41,6 +41,22 @@ export class Gameboard {
     return true;
   }
 
+  receiveAttack(coordinates) {
+    if (!this.#isOnBoard(coordinates)) return false;
+
+    const [row, column] = coordinates;
+
+    if (this.#board[row][column].attacked) return false;
+
+    this.#board[row][column].attacked = true;
+
+    if (this.#board[row][column].ship) {
+      this.#board[row][column].ship.hit();
+      return true;
+    }
+    return false;
+  }
+
   #createBoard() {
     let board = [];
     for (let i = 0; i < BOARD_SIZE.rows; i++) {

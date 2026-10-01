@@ -46,3 +46,13 @@ test("ship that is placed on coordinates that another ship occupies is not place
   expect(shipPlaced).toBeFalsy();
   expect(board[1][5].ship).toBeNull();
 });
+
+test("cell displays attacked ship", () => {
+  expect(gameboard.receiveAttack([1, 4])).toBeTruthy();
+  expect(board[1][4].attacked).toBeTruthy();
+});
+
+test("empty cell displays missed hit", () => {
+  expect(gameboard.receiveAttack([1, 6])).toBeFalsy();
+  expect(board[1][6].attacked).toBeTruthy();
+});
