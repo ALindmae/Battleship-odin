@@ -3,7 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Battleship</title>
   </head>
-  <body></body>
+  <body>
+    <main>
+      <div id="announcements">
+        <p aria-live="polite" class="game-status"></p>
+        <div hidden class="game-controls">
+          <button type="button" class="game-controls__restart">Restart</button>
+          <button type="button" class="game-controls__new-game">
+            New game
+          </button>
+        </div>
+      </div>
+      <div class="gameboards">
+        <div class="gameboard">
+          <p class="gameboard__title">Your grid</p>
+          <div class="gameboard__slot" data-board="player"></div>
+        </div>
+        <div class="gameboard">
+          <p class="gameboard__title">Opponent's grid</p>
+          <div class="gameboard__slot" data-board="computer"></div>
+        </div>
+      </div>
+    </main>
+  </body>
 </html>
