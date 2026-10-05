@@ -1,6 +1,6 @@
 import { Ship } from "./ship.js";
 
-const BOARD_SIZE = {
+export const BOARD_SIZE = {
   columns: 10,
   rows: 10,
 };
@@ -9,6 +9,14 @@ export const PLACEMENT_DIRECTIONS = {
   horizontal: "horizontal",
   vertical: "vertical",
 };
+
+export const FLEET = [
+  { type: "carrier", length: 5 },
+  { type: "battleship", length: 4 },
+  { type: "cruiser", length: 3 },
+  { type: "submarine", length: 3 },
+  { type: "destroyer", length: 2 },
+];
 
 export class Gameboard {
   #board;
