@@ -7,23 +7,27 @@
   </head>
   <body>
     <main>
-      <div id="announcements">
-        <p aria-live="polite" class="game-status"></p>
-        <div hidden class="game-controls">
-          <button type="button" class="game-controls__restart">Restart</button>
-          <button type="button" class="game-controls__new-game">
-            New game
-          </button>
+      <div class="game-container">
+        <div id="announcements">
+          <p aria-live="polite" class="game-status"></p>
+          <div hidden class="game-controls">
+            <button type="button" class="game-controls__restart">
+              Restart
+            </button>
+            <button type="button" class="game-controls__new-game">
+              New game
+            </button>
+          </div>
         </div>
-      </div>
-      <div class="gameboards">
-        <div class="gameboard">
-          <p class="gameboard__title">Your grid</p>
-          <div class="gameboard__slot" data-board="player1"></div>
-        </div>
-        <div class="gameboard">
-          <p class="gameboard__title">Opponent's grid</p>
-          <div class="gameboard__slot" data-board="player2"></div>
+        <div class="gameboards">
+          <div class="gameboard">
+            <p class="gameboard__title">Your grid</p>
+            <div class="gameboard__slot" data-board="player1"></div>
+          </div>
+          <div class="gameboard">
+            <p class="gameboard__title">Opponent's grid</p>
+            <div class="gameboard__slot" data-board="player2"></div>
+          </div>
         </div>
       </div>
     </main>
