@@ -91,3 +91,12 @@ table {
     outline: 2px solid currentColor;
     outline-offset: 2px;
 }
+
+/* VARIABLES */
+:root {
+    --color-blue-900: #0A1F33;
+    --color-blue-700: #0F3A5C;
+    --color-blue-500: #1A6298;
+    --color-grey-400: #A3ADB7;
+    --color-red-600: #CC4141;
+}
