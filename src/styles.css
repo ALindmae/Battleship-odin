@@ -100,3 +100,130 @@ table {
     --color-grey-400: #A3ADB7;
     --color-red-600: #CC4141;
 }
+
+/* STYLES */
+.game-container {
+    color: white;
+    background-color: var(--color-blue-700);
+    height: 700px;
+    min-height: fit-content;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#announcements {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+
+    padding: 2rem;
+}
+
+#announcements>p {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.game-controls > button{
+    margin: 0.2rem;   
+    padding: 0.6rem 1.5rem;
+    border-radius: 2px;
+    color:white;
+}
+
+.game-controls__restart {
+    background-color: var(--color-blue-500);
+}
+
+.game-controls__new-game {
+    background-color: var(--color-blue-900);
+}
+
+.gameboards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    margin: 1.5rem;
+}
+
+.gameboard {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+}
+
+.gameboard__title {
+    margin: 0.5rem;
+}
+ 
+.gameboard__slot {
+    height: 400px;
+    width: 400px;
+}
+
+.gameboard__grid {
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-blue-700);
+    display: grid;
+    column-gap: 2px;
+    row-gap: 2px;
+    grid-template-rows: repeat(10, 1fr);
+    grid-template-columns: repeat(10, 1fr);
+}
+
+.square {
+    background-color: var(--color-blue-900);
+    position: relative;
+}
+
+.ship {
+    background-color: var(--color-grey-400);
+}
+
+.hit::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    height: 50%;
+
+    mask-image: url("./assets/icons/x.svg");
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    mask-position: center;
+
+    -webkit-mask-image: url("./assets/icons/x.svg");
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+    -webkit-mask-position: center;
+
+    background-color: var(--color-red-600);
+}
+
+.miss::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    height: 50%;
+
+    mask-image: url("./assets/icons/circle-fill.svg");
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    mask-position: center;
+
+    -webkit-mask-image: url("./assets/icons/circle-fill.svg");
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+    -webkit-mask-position: center;
+
+    background-color: var(--color-blue-500);
+}
