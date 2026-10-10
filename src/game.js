@@ -11,6 +11,10 @@ const players = {
 players.player1 = new Player({ type: PLAYER_TYPES.human, name: "John" });
 players.player2 = new Player({ type: PLAYER_TYPES.computer });
 
+function getRandomItem(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
 // place ships randomly on gameboard (use for both players while producing game features)
 function placeShipsRandomly(player) {
   const directions = Object.values(PLACEMENT_DIRECTIONS);
@@ -18,8 +22,7 @@ function placeShipsRandomly(player) {
   for (const ship of FLEET) {
     let placed;
     do {
-      const direction =
-        directions[Math.floor(Math.random() * directions.length)];
+      const direction = getRandomItem(directions);
       const coordinates = [];
       if (direction === PLACEMENT_DIRECTIONS.horizontal)
         coordinates.push(
