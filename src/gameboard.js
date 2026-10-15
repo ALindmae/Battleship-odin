@@ -123,4 +123,14 @@ export class Gameboard {
     }
     return true;
   }
+
+  getUnattackedCoordinates() {
+    const coordinates = [];
+    for (let row = 0; row < this.#board.length; row++) {
+      for (let column = 0; column < this.#board[row].length; column++) {
+        if (!this.#board[row][column].attacked) coordinates.push([row, column]);
+      }
+    }
+    return coordinates;
+  }
 }
