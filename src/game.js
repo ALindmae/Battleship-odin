@@ -6,7 +6,7 @@ import {
   FLEET,
   ATTACK_RESULTS,
 } from "./gameboard";
-import { renderGameBoard, bindEvents } from "./dom";
+import { renderGameBoard, bindEvents, renderAnnouncement } from "./dom";
 
 const players = {
   player1: null,
@@ -16,6 +16,12 @@ const players = {
 const gameState = {
   turn: "player1",
   winner: null,
+};
+
+const announcements = {
+  turn(name) {
+    return `${name}'s turn.`;
+  },
 };
 
 players.player1 = new Player({ type: PLAYER_TYPES.human, name: "John" });
@@ -75,6 +81,7 @@ function playHumanTurn(coordinates, opponentKey) {
     boardSlot: opponentKey,
     showShips: opponentKey === "player1",
   });
+  renderAnnouncement(announcements.turn(opponent.name));
   playGame();
 }
 
@@ -101,6 +108,7 @@ function playComputerTurn() {
       boardSlot: opponentKey,
       showShips: opponentKey === "player1",
     });
+    renderAnnouncement(announcements.turn(opponent.name));
     playGame();
   }, 1500);
 }

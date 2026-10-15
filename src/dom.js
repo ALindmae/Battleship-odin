@@ -74,3 +74,8 @@ function handleSquareClick({ square, slot, onSquareClick }) {
   const playerKey = slot.dataset.board;
   onSquareClick(coordinates, playerKey);
 }
+
+export function renderAnnouncement(text) {
+  const gameStatus = document.querySelector(".game-status");
+  gameStatus.textContent = text;
+}
