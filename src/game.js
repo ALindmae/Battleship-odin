@@ -6,7 +6,12 @@ import {
   FLEET,
   ATTACK_RESULTS,
 } from "./gameboard";
-import { renderGameBoard, bindEvents, renderAnnouncement } from "./dom";
+import {
+  renderGameBoard,
+  bindEvents,
+  renderAnnouncement,
+  renderWinner,
+} from "./dom";
 
 const players = {
   player1: null,
@@ -19,6 +24,9 @@ const gameState = {
 };
 
 const announcements = {
+  winner(name) {
+    return `Game Over! ${name} won!`;
+  },
   turn(name) {
     return `${name}'s turn.`;
   },
@@ -120,7 +128,7 @@ function playGame() {
   if (player1NoShipsLeft || player2NoShipsLeft) {
     gameState.winner = player1NoShipsLeft ? players.player1 : players.player2;
     gameState.turn = null;
-    console.log(`Game over! ${gameState.winner.name} wins!`);
+    renderWinner(announcements.winner(gameState.winner.name));
     return;
   }
 

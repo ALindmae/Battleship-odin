@@ -79,3 +79,9 @@ export function renderAnnouncement(text) {
   const gameStatus = document.querySelector(".game-status");
   gameStatus.textContent = text;
 }
+
+export function renderWinner(text) {
+  renderAnnouncement(text);
+  const gameControls = document.querySelector(".game-controls");
+  gameControls.hidden = false;
+}
