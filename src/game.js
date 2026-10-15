@@ -15,6 +15,7 @@ const players = {
 
 const gameState = {
   turn: "player1",
+  winner: null,
 };
 
 players.player1 = new Player({ type: PLAYER_TYPES.human, name: "John" });
@@ -105,6 +106,16 @@ function playComputerTurn() {
 }
 
 function playGame() {
+  const player1NoShipsLeft = players.player1.gameboard.allShipsSunk();
+  const player2NoShipsLeft = players.player2.gameboard.allShipsSunk();
+
+  if (player1NoShipsLeft || player2NoShipsLeft) {
+    gameState.winner = player1NoShipsLeft ? players.player1 : players.player2;
+    gameState.turn = null;
+    console.log(`Game over! ${gameState.winner.name} wins!`);
+    return;
+  }
+
   switch (players[gameState.turn].type) {
     case PLAYER_TYPES.computer:
       playComputerTurn();
