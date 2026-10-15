@@ -39,6 +39,18 @@ function getRandomItem(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+function getShowShips(playerKey) {
+  if (gameState.winner) return true;
+
+  const hasComputer = Object.values(players).some(
+    (p) => p.type === PLAYER_TYPES.computer,
+  );
+
+  return hasComputer
+    ? players[playerKey].type === PLAYER_TYPES.human
+    : gameState.turn === playerKey;
+}
+
 // place ships randomly on gameboard (use for both players while producing game features)
 function placeShipsRandomly(player) {
   const directions = Object.values(PLACEMENT_DIRECTIONS);
@@ -87,7 +99,7 @@ function playHumanTurn(coordinates, opponentKey) {
   renderGameBoard({
     board: opponent.gameboard.board,
     boardSlot: opponentKey,
-    showShips: opponentKey === "player1",
+    showShips: getShowShips(opponentKey),
   });
   renderAnnouncement(announcements.turn(opponent.name));
   playGame();
@@ -114,7 +126,7 @@ function playComputerTurn() {
     renderGameBoard({
       board: opponent.gameboard.board,
       boardSlot: opponentKey,
-      showShips: opponentKey === "player1",
+      showShips: getShowShips(opponentKey),
     });
     renderAnnouncement(announcements.turn(opponent.name));
     playGame();
@@ -145,7 +157,7 @@ for (const [key, player] of Object.entries(players)) {
   renderGameBoard({
     board: player.gameboard.board,
     boardSlot: key,
-    showShips: key === "player1",
+    showShips: getShowShips(key),
   });
 }
 
