@@ -74,6 +74,41 @@ function playHumanTurn(coordinates, opponentKey) {
     boardSlot: opponentKey,
     showShips: opponentKey === "player1",
   });
+  playGame();
+}
+
+function playComputerTurn() {
+  if (!gameState.turn) return;
+
+  setTimeout(() => {
+    const opponentKey = Object.keys(players).find(
+      (playerKey) => playerKey !== gameState.turn,
+    );
+    const opponent = players[opponentKey];
+
+    const coordinates = getRandomItem(
+      opponent.gameboard.getUnattackedCoordinates(opponent.gameboard.board),
+    );
+
+    const result = opponent.gameboard.receiveAttack(coordinates);
+    if (result === ATTACK_RESULTS.rejected)
+      throw new Error(`Invalid coordinates passed: ${coordinates}`);
+
+    gameState.turn = opponentKey;
+    renderGameBoard({
+      board: opponent.gameboard.board,
+      boardSlot: opponentKey,
+      showShips: opponentKey === "player1",
+    });
+    playGame();
+  }, 1500);
+}
+
+function playGame() {
+  switch (players[gameState.turn].type) {
+    case PLAYER_TYPES.computer:
+      playComputerTurn();
+  }
 }
 
 placeShipsRandomly(players.player1);
