@@ -1,6 +1,11 @@
 import { Player, PLAYER_TYPES } from "./player";
 import "./styles.css";
-import { PLACEMENT_DIRECTIONS, BOARD_SIZE, FLEET } from "./gameboard";
+import {
+  PLACEMENT_DIRECTIONS,
+  BOARD_SIZE,
+  FLEET,
+  ATTACK_RESULTS,
+} from "./gameboard";
 import { renderGameBoard } from "./dom";
 
 const players = {

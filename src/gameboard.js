@@ -18,6 +18,12 @@ export const FLEET = [
   { type: "destroyer", length: 2 },
 ];
 
+export const ATTACK_RESULTS = {
+  hit: "hit",
+  miss: "miss",
+  rejected: "rejected",
+};
+
 export class Gameboard {
   #board;
   #ships;
@@ -54,19 +60,19 @@ export class Gameboard {
   }
 
   receiveAttack(coordinates) {
-    if (!this.#isOnBoard(coordinates)) return false;
+    if (!this.#isOnBoard(coordinates)) return ATTACK_RESULTS.rejected;
 
     const [row, column] = coordinates;
 
-    if (this.#board[row][column].attacked) return false;
+    if (this.#board[row][column].attacked) return ATTACK_RESULTS.rejected;
 
     this.#board[row][column].attacked = true;
 
     if (this.#board[row][column].ship) {
       this.#board[row][column].ship.hit();
-      return true;
+      return ATTACK_RESULTS.hit;
     }
-    return false;
+    return ATTACK_RESULTS.miss;
   }
 
   allShipsSunk() {
