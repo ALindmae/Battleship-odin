@@ -6,11 +6,15 @@ import {
   FLEET,
   ATTACK_RESULTS,
 } from "./gameboard";
-import { renderGameBoard } from "./dom";
+import { renderGameBoard, bindEvents } from "./dom";
 
 const players = {
   player1: null,
   player2: null,
+};
+
+const gameState = {
+  turn: "player1",
 };
 
 players.player1 = new Player({ type: PLAYER_TYPES.human, name: "John" });
@@ -50,6 +54,28 @@ function placeShipsRandomly(player) {
   }
 }
 
+function playHumanTurn(coordinates, opponentKey) {
+  if (
+    !gameState.turn ||
+    players[gameState.turn].type === PLAYER_TYPES.computer ||
+    gameState.turn === opponentKey
+  )
+    return;
+
+  const opponent = players[opponentKey];
+
+  const result = opponent.gameboard.receiveAttack(coordinates);
+  if (result === ATTACK_RESULTS.rejected) return;
+
+  gameState.turn = opponentKey;
+
+  renderGameBoard({
+    board: opponent.gameboard.board,
+    boardSlot: opponentKey,
+    showShips: opponentKey === "player1",
+  });
+}
+
 placeShipsRandomly(players.player1);
 placeShipsRandomly(players.player2);
 
@@ -60,3 +86,5 @@ for (const [key, player] of Object.entries(players)) {
     showShips: key === "player1",
   });
 }
+
+bindEvents({ onSquareClick: playHumanTurn });

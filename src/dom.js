@@ -52,3 +52,25 @@ export function renderGameBoard({ board, boardSlot, showShips }) {
     );
   slot.replaceChildren(createGridElement({ board, showShips }));
 }
+
+export function bindEvents(callbacks) {
+  const body = document.body;
+
+  body.addEventListener("click", (e) => handleClick(e, callbacks));
+}
+
+function handleClick(e, callbacks) {
+  const square = e.target.closest(".square");
+  const slot = e.target.closest("[data-board]");
+  if (square && slot)
+    handleSquareClick({ square, slot, onSquareClick: callbacks.onSquareClick });
+}
+
+function handleSquareClick({ square, slot, onSquareClick }) {
+  const coordinates = [
+    Number(square.dataset.row),
+    Number(square.dataset.column),
+  ];
+  const playerKey = slot.dataset.board;
+  onSquareClick(coordinates, playerKey);
+}
