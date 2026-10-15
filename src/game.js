@@ -51,6 +51,16 @@ function getShowShips(playerKey) {
     : gameState.turn === playerKey;
 }
 
+function renderBoards() {
+  for (const [key, player] of Object.entries(players)) {
+    renderGameBoard({
+      board: player.gameboard.board,
+      boardSlot: key,
+      showShips: getShowShips(key),
+    });
+  }
+}
+
 // place ships randomly on gameboard (use for both players while producing game features)
 function placeShipsRandomly(player) {
   const directions = Object.values(PLACEMENT_DIRECTIONS);
@@ -96,11 +106,7 @@ function playHumanTurn(coordinates, opponentKey) {
 
   gameState.turn = opponentKey;
 
-  renderGameBoard({
-    board: opponent.gameboard.board,
-    boardSlot: opponentKey,
-    showShips: getShowShips(opponentKey),
-  });
+  renderBoards();
   renderAnnouncement(announcements.turn(opponent.name));
   playGame();
 }
@@ -123,11 +129,7 @@ function playComputerTurn() {
       throw new Error(`Invalid coordinates passed: ${coordinates}`);
 
     gameState.turn = opponentKey;
-    renderGameBoard({
-      board: opponent.gameboard.board,
-      boardSlot: opponentKey,
-      showShips: getShowShips(opponentKey),
-    });
+    renderBoards();
     renderAnnouncement(announcements.turn(opponent.name));
     playGame();
   }, 1500);
@@ -153,12 +155,6 @@ function playGame() {
 placeShipsRandomly(players.player1);
 placeShipsRandomly(players.player2);
 
-for (const [key, player] of Object.entries(players)) {
-  renderGameBoard({
-    board: player.gameboard.board,
-    boardSlot: key,
-    showShips: getShowShips(key),
-  });
-}
+renderBoards();
 
 bindEvents({ onSquareClick: playHumanTurn });
