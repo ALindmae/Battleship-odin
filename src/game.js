@@ -109,8 +109,6 @@ function playHumanTurn(coordinates, opponentKey) {
   )
     return;
 
-  const opponent = players[opponentKey];
-
   resolveAttack(coordinates, opponentKey);
 }
 
