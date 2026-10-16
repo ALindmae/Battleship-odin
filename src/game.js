@@ -19,7 +19,7 @@ const players = {
 };
 
 const gameState = {
-  turn: "player1",
+  turn: "null",
   winner: null,
 };
 
@@ -31,9 +31,6 @@ const announcements = {
     return `${name}'s turn.`;
   },
 };
-
-players.player1 = new Player({ type: PLAYER_TYPES.human, name: "John" });
-players.player2 = new Player({ type: PLAYER_TYPES.computer });
 
 function getRandomItem(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -150,9 +147,23 @@ function playGame() {
   }
 }
 
-placeShipsRandomly(players.player1);
-placeShipsRandomly(players.player2);
+function initGame() {
+  setUpGame();
+  if (players[gameState.turn].type === PLAYER_TYPES.computer)
+    playComputerTurn();
+}
 
+function setUpGame() {
+  players.player1 = new Player({ type: PLAYER_TYPES.human, name: "John" });
+  players.player2 = new Player({ type: PLAYER_TYPES.computer });
+
+  placeShipsRandomly(players.player1);
+  placeShipsRandomly(players.player2);
+
+  gameState.turn = getRandomItem(Object.keys(players));
+  renderAnnouncement(announcements.turn(players[gameState.turn].name));
+}
+
+initGame();
 renderBoards();
-
 bindEvents({ onSquareClick: playHumanTurn });
