@@ -138,6 +138,7 @@ function playGame() {
     gameState.winner = player1NoShipsLeft ? players.player1 : players.player2;
     gameState.turn = null;
     renderWinner(announcements.winner(gameState.winner.name));
+    renderBoards();
     return;
   }
 
