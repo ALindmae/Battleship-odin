@@ -135,7 +135,7 @@ function playGame() {
   const player2NoShipsLeft = players.player2.gameboard.allShipsSunk();
 
   if (player1NoShipsLeft || player2NoShipsLeft) {
-    gameState.winner = player1NoShipsLeft ? players.player1 : players.player2;
+    gameState.winner = player1NoShipsLeft ? players.player2 : players.player1;
     gameState.turn = null;
     renderWinner(announcements.winner(gameState.winner.name));
     renderBoards();
