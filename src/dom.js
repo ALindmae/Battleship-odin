@@ -7,6 +7,10 @@ const SQUARE_CLASSES = {
 
 const GRID_CLASSES = ["gameboard__grid"];
 
+const SLOT_CLASSES = {
+  locked: "locked",
+};
+
 function getSquareClasses(cell, showShips) {
   const classes = [SQUARE_CLASSES.square];
   if (cell.ship && showShips) classes.push(SQUARE_CLASSES.ship);
@@ -44,8 +48,9 @@ function createGridElement({ board, showShips }) {
   return gridElement;
 }
 
-export function renderGameBoard({ board, boardSlot, showShips }) {
+export function renderGameBoard({ board, boardSlot, showShips, isLocked }) {
   const slot = document.querySelector(`[data-board="${boardSlot}"]`);
+  slot.classList.toggle(SLOT_CLASSES.locked, isLocked);
   if (!slot)
     throw new Error(
       `no matching element found in the DOM: data-board=${boardSlot}`,

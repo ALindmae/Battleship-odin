@@ -57,6 +57,7 @@ function renderBoards() {
       board: player.gameboard.board,
       boardSlot: key,
       showShips: getShowShips(key),
+      isLocked: key === gameState.turn || !!gameState.winner,
     });
   }
 }
