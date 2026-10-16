@@ -91,6 +91,16 @@ function placeShipsRandomly(player) {
   }
 }
 
+function resolveAttack(coordinates, opponentKey) {
+  const opponent = players[opponentKey];
+  const result = opponent.gameboard.receiveAttack(coordinates);
+  if (result === ATTACK_RESULTS.rejected) return result;
+  gameState.turn = opponentKey;
+  renderBoards();
+  renderAnnouncement(announcements.turn(opponent.name));
+  playGame();
+}
+
 function playHumanTurn(coordinates, opponentKey) {
   if (
     !gameState.turn ||
@@ -101,14 +111,7 @@ function playHumanTurn(coordinates, opponentKey) {
 
   const opponent = players[opponentKey];
 
-  const result = opponent.gameboard.receiveAttack(coordinates);
-  if (result === ATTACK_RESULTS.rejected) return;
-
-  gameState.turn = opponentKey;
-
-  renderBoards();
-  renderAnnouncement(announcements.turn(opponent.name));
-  playGame();
+  resolveAttack(coordinates, opponentKey);
 }
 
 function playComputerTurn() {
@@ -124,14 +127,10 @@ function playComputerTurn() {
       opponent.gameboard.getUnattackedCoordinates(opponent.gameboard.board),
     );
 
-    const result = opponent.gameboard.receiveAttack(coordinates);
+    const result = resolveAttack(coordinates, opponentKey);
+
     if (result === ATTACK_RESULTS.rejected)
       throw new Error(`Invalid coordinates passed: ${coordinates}`);
-
-    gameState.turn = opponentKey;
-    renderBoards();
-    renderAnnouncement(announcements.turn(opponent.name));
-    playGame();
   }, 1500);
 }
 
