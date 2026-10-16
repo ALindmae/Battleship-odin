@@ -124,7 +124,7 @@ function playComputerTurn() {
     const opponent = players[opponentKey];
 
     const coordinates = getRandomItem(
-      opponent.gameboard.getUnattackedCoordinates(opponent.gameboard.board),
+      opponent.gameboard.getUnattackedCoordinates(),
     );
 
     const result = resolveAttack(coordinates, opponentKey);
