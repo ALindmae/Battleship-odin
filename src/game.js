@@ -19,7 +19,7 @@ const players = {
 };
 
 const gameState = {
-  turn: "null",
+  turn: null,
   winner: null,
 };
 
