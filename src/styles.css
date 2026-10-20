@@ -102,6 +102,109 @@ table {
 }
 
 /* STYLES */
+.menu {
+    background-image: url("./assets/images/menu-hero.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: var(--color-blue-700);
+    height: 700px;
+    width: 100vw;
+    
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(8, 1fr);
+    justify-items: center;
+    align-items: end;
+}
+
+.menu__form{
+    grid-row: 7;
+    grid-column: 1;
+}
+
+.name-form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    gap: 0.7rem;
+}
+
+.name-form__title {
+    font-size: 1.5rem;
+}
+
+.name-form__field{
+    width: min(85vw, 850px);
+    height: auto;
+    font-size: 1.2rem;
+    display: flex;
+    gap: 0.5rem;
+}
+
+input {
+    padding: 1rem 1rem;
+    width: 100%;
+    background-color: var(--color-blue-900);
+}
+
+ [hidden] {
+     display: none !important;
+ }
+
+.name-form__submit {
+    padding: 1.3rem;
+    background-color: var(--color-blue-900);
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.name-form__submit::before {
+    content: "";
+    display: block;
+    mask-image: url("./assets/icons/enter.svg");
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    mask-position: center;
+
+    -webkit-mask-image: url("./assets/icons/enter.svg");
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+    -webkit-mask-position: center;
+
+    background-color: white;
+    width: 1.4rem;
+    height: 1.4rem;
+}
+
+.game-modes {
+    color: white;
+    grid-row: 6;
+    grid-column: 1;
+
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.game-modes__title {
+    font-size: 1.5rem;
+    padding: 0.5rem;
+}
+
+.game-modes__options {
+    display: flex;
+    gap: 1rem;
+    padding: 0.5rem;
+}
+
+.game-modes__options > button {
+    padding: 0.7rem 1.7rem;
+    background-color: var(--color-blue-900)
+}
 
 .game {
     color: white;

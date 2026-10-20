@@ -7,7 +7,74 @@
   </head>
   <body>
     <main>
-      <div class="game" data-screen="game">
+      <div class="menu" data-screen="menu">
+        <form class="menu__form" novalidate>
+          <input type="hidden" name="mode" value="" />
+          <!-- player 1 name (visible at start) -->
+          <div class="name-form" data-step="player1">
+            <p class="name-form__title">Player name</p>
+            <div class="name-form__field">
+              <input
+                type="text"
+                name="player1"
+                class="name-form__input"
+                aria-label="Player 1 name"
+                required
+                placeholder="Enter your name:"
+              />
+              <button
+                type="button"
+                class="name-form__submit"
+                data-action="next"
+                aria-label="Confirm name"
+              ></button>
+            </div>
+          </div>
+          <!-- Step 2: game mode (hidden until the name is confirmed) -->
+          <div hidden class="menu__game-modes game-modes" data-step="mode">
+            <p class="game-modes__title" id="game-modes-title">Game mode</p>
+            <div
+              class="game-modes__options"
+              role="group"
+              aria-labelledby="game-modes-title"
+            >
+              <button
+                type="button"
+                class="game-modes__button"
+                data-mode="single"
+              >
+                Single player
+              </button>
+              <button
+                type="button"
+                class="game-modes__button"
+                data-mode="multi"
+              >
+                Multiplayer
+              </button>
+            </div>
+          </div>
+          <!-- Step 3: player 2 name (hidden until multiplayer is chosen) -->
+          <div hidden class="name-form" data-step="player2">
+            <p class="name-form__title">Player name</p>
+            <div class="name-form__field">
+              <input
+                type="text"
+                name="player2"
+                class="name-form__input"
+                aria-label="Player 2 name"
+                placeholder="Enter player 2 name:"
+              />
+              <button
+                type="submit"
+                class="name-form__submit"
+                aria-label="Start Game"
+              ></button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div hidden class="game" data-screen="game">
         <div id="announcements">
           <p aria-live="polite" class="game-status"></p>
           <div hidden class="game-controls">
