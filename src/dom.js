@@ -11,6 +11,11 @@ const SLOT_CLASSES = {
   locked: "locked",
 };
 
+export const SCREENS = {
+  menu: "menu",
+  game: "game",
+};
+
 function getSquareClasses(cell, showShips) {
   const classes = [SQUARE_CLASSES.square];
   if (cell.ship && showShips) classes.push(SQUARE_CLASSES.ship);
@@ -89,4 +94,13 @@ export function renderWinner(text) {
   renderAnnouncement(text);
   const gameControls = document.querySelector(".game-controls");
   gameControls.hidden = false;
+}
+
+export function showScreen(screen) {
+  if (!Object.values(SCREENS).includes(screen))
+    throw new Error(`invalid screen variable passed: ${screen}`);
+
+  for (const name of Object.values(SCREENS)) {
+    document.querySelector(`[data-screen="${name}"]`).hidden = name !== screen;
+  }
 }

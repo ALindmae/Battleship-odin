@@ -11,6 +11,8 @@ import {
   bindEvents,
   renderAnnouncement,
   renderWinner,
+  showScreen,
+  SCREENS,
 } from "./dom";
 
 const players = {
@@ -150,6 +152,7 @@ function playGame() {
 
 function initGame() {
   setUpGame();
+  showScreen(SCREENS.game);
   if (players[gameState.turn].type === PLAYER_TYPES.computer)
     playComputerTurn();
 }
