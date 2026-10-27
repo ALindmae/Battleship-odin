@@ -24,6 +24,7 @@ const players = {
 const gameState = {
   turn: null,
   winner: null,
+  mode: null,
 };
 
 const GAME_MODES = {
@@ -47,11 +48,7 @@ function getRandomItem(arr) {
 function getShowShips(playerKey) {
   if (gameState.winner) return true;
 
-  const hasComputer = Object.values(players).some(
-    (p) => p.type === PLAYER_TYPES.computer,
-  );
-
-  return hasComputer
+  gameState.mode === GAME_MODES.single
     ? players[playerKey].type === PLAYER_TYPES.human
     : gameState.turn === playerKey;
 }
@@ -160,12 +157,14 @@ function initGame(payload) {
   setUpGame(payload);
   showScreen(SCREENS.game);
   renderBoards();
-
-  if (players[gameState.turn].type === PLAYER_TYPES.computer)
-    playComputerTurn();
+  playGame();
 }
 
 function setUpGame(payload) {
+  if (!Object.values(GAME_MODES).includes(payload.mode))
+    throw new Error(`unknown game mode: ${payload.mode}`);
+
+  gameState.mode = payload.mode;
   players.player1 = new Player({
     type: PLAYER_TYPES.human,
     name: `${payload.player1Name}`,
