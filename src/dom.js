@@ -16,6 +16,124 @@ export const SCREENS = {
   game: "game",
 };
 
+const MENU_STATES = {
+  idle: "idle",
+  player1Name: "player1Name",
+  mode: "mode",
+  player2Name: "player2Name",
+};
+
+const MENU_EVENTS = {
+  setup: "setup",
+  player1Submit: "player1Submit",
+  multiChosen: "multiChosen",
+  start: "start",
+};
+
+const menuStateMachine = {
+  currentState: MENU_STATES.idle,
+  states: {
+    [MENU_STATES.idle]: {
+      entry: {
+        beforeRender: ["resetMenu"],
+        afterRender: [],
+      },
+      on: {
+        [MENU_EVENTS.setup]: {
+          target: MENU_STATES.player1Name,
+        },
+      },
+    },
+    [MENU_STATES.player1Name]: {
+      entry: {
+        beforeRender: [],
+        afterRender: ["preparePlayerNameField"],
+      },
+      on: {
+        [MENU_EVENTS.player1Submit]: {
+          target: MENU_STATES.mode,
+        },
+      },
+    },
+    [MENU_STATES.mode]: {
+      entry: {
+        beforeRender: [],
+        afterRender: [],
+      },
+      on: {
+        [MENU_EVENTS.start]: {
+          target: MENU_STATES.idle,
+        },
+        [MENU_EVENTS.multiChosen]: {
+          target: MENU_STATES.player2Name,
+        },
+      },
+    },
+    [MENU_STATES.player2Name]: {
+      entry: {
+        beforeRender: [],
+        afterRender: ["preparePlayerNameField"],
+      },
+      on: {
+        [MENU_EVENTS.start]: {
+          target: MENU_STATES.idle,
+        },
+      },
+    },
+  },
+
+  send(event) {
+    const transition = this.states[this.currentState].on[event];
+    if (!transition) return;
+    this.transitionInto(transition.target);
+  },
+
+  transitionInto(target) {
+    const menu = document.querySelector(".menu");
+    this.currentState = target;
+
+    this.runEntries({ menu, target, phase: "beforeRender" });
+    this.render(menu);
+    this.runEntries({ menu, target, phase: "afterRender" });
+  },
+
+  render(menu) {
+    for (const step of menu.querySelectorAll("[data-step]")) {
+      step.hidden = step.dataset.step !== this.currentState;
+    }
+  },
+
+  runEntries({ menu, target, phase }) {
+    const actions = this.states[target].entry[phase];
+
+    actions.forEach((action) => {
+      menuStateMachine.entries[action](menu);
+    });
+  },
+
+  entries: {
+    resetMenu(menu) {
+      const inputs = menu.querySelectorAll("input");
+
+      inputs.forEach((input) => {
+        input.required = false;
+        input.value = "";
+      });
+    },
+    preparePlayerNameField(menu) {
+      const playerInput = menu.querySelector(
+        `[data-step="${menuStateMachine.currentState}"] input`,
+      );
+      playerInput.required = true;
+      playerInput.focus();
+    },
+  },
+};
+
+export function openMenu() {
+  menuStateMachine.send(MENU_EVENTS.setup);
+}
+
 function getSquareClasses(cell, showShips) {
   const classes = [SQUARE_CLASSES.square];
   if (cell.ship && showShips) classes.push(SQUARE_CLASSES.ship);
@@ -72,8 +190,12 @@ export function bindEvents(callbacks) {
 function handleClick(e, callbacks) {
   const square = e.target.closest(".square");
   const slot = e.target.closest("[data-board]");
+  const menuButton = e.target.closest("[data-event]");
+
   if (square && slot)
     handleSquareClick({ square, slot, onSquareClick: callbacks.onSquareClick });
+
+  if (menuButton) handleMenuClick(menuButton);
 }
 
 function handleSquareClick({ square, slot, onSquareClick }) {
@@ -94,6 +216,14 @@ export function renderWinner(text) {
   renderAnnouncement(text);
   const gameControls = document.querySelector(".game-controls");
   gameControls.hidden = false;
+}
+
+function handleMenuClick(button) {
+  const player1NameField = button.closest("[data-step='player1Name']");
+  if (player1NameField) {
+    if (!player1NameField.querySelector("input").reportValidity()) return;
+  }
+  menuStateMachine.send(MENU_EVENTS[button.dataset.event]);
 }
 
 export function showScreen(screen) {

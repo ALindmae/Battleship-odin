@@ -8,10 +8,10 @@
   <body>
     <main>
       <div hidden class="menu" data-screen="menu">
-        <form class="menu__form" novalidate>
+        <form class="menu__form">
           <input type="hidden" name="mode" value="" />
           <!-- player 1 name (visible at start) -->
-          <div class="name-form" data-step="player1">
+          <div class="name-form" data-step="player1Name">
             <p class="name-form__title">Player name</p>
             <div class="name-form__field">
               <input
@@ -19,13 +19,12 @@
                 name="player1"
                 class="name-form__input"
                 aria-label="Player 1 name"
-                required
                 placeholder="Enter your name:"
               />
               <button
                 type="button"
                 class="name-form__submit"
-                data-action="next"
+                data-event="player1Submit"
                 aria-label="Confirm name"
               ></button>
             </div>
@@ -41,21 +40,21 @@
               <button
                 type="button"
                 class="game-modes__button"
-                data-mode="single"
+                data-event="start"
               >
                 Single player
               </button>
               <button
                 type="button"
                 class="game-modes__button"
-                data-mode="multi"
+                data-event="multiChosen"
               >
                 Multiplayer
               </button>
             </div>
           </div>
           <!-- Step 3: player 2 name (hidden until multiplayer is chosen) -->
-          <div hidden class="name-form" data-step="player2">
+          <div hidden class="name-form" data-step="player2Name">
             <p class="name-form__title">Player name</p>
             <div class="name-form__field">
               <input
@@ -66,8 +65,9 @@
                 placeholder="Enter player 2 name:"
               />
               <button
-                type="submit"
+                type="button"
                 class="name-form__submit"
+                data-event="start"
                 aria-label="Start Game"
               ></button>
             </div>
