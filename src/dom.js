@@ -186,6 +186,7 @@ export function bindEvents(callbacks) {
 
   body.addEventListener("click", (e) => handleClick(e, callbacks));
   body.addEventListener("submit", (e) => handleSubmit(e, callbacks));
+  body.addEventListener("keydown", handleKeydown);
 }
 
 function handleClick(e, callbacks) {
@@ -250,6 +251,53 @@ function handleMenuFormSubmit({ event, form, onMenuFormSubmit }) {
   });
 
   menuStateMachine.send(MENU_EVENTS.start);
+}
+
+function handleKeydown(event) {
+  if (
+    event.key === "Enter" &&
+    !event.ctrlKey &&
+    !event.shiftKey &&
+    !event.altKey &&
+    !event.metaKey
+  ) {
+    handleEnterKeydown(event);
+  }
+}
+
+function handleEnterKeydown(event) {
+  const isFocusedElement = event.target !== document.body;
+  const form = event.target.closest(".menu__form");
+
+  if (form) handleMenuFormEnterKeydown({ event, form });
+  if (!isFocusedElement) {
+    if (menuStateMachine.currentState !== MENU_STATES.idle)
+      handleMenuFormEnterKeydown({
+        event,
+        form: document.querySelector(".menu__form"),
+      });
+  }
+}
+
+function handleMenuFormEnterKeydown({ event, form }) {
+  if (event.target.closest("button")) return;
+  event.preventDefault();
+
+  const state = menuStateMachine.currentState;
+  const button = form.querySelector(
+    `[data-step="${state}"] .name-form__submit`,
+  );
+  if (!button) return;
+
+  switch (state) {
+    case MENU_STATES.player1Name:
+      handleMenuClick(button);
+      break;
+
+    case MENU_STATES.player2Name:
+      form.requestSubmit(button);
+      break;
+  }
 }
 
 export function showScreen(screen) {
