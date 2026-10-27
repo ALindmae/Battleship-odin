@@ -185,6 +185,7 @@ export function bindEvents(callbacks) {
   const body = document.body;
 
   body.addEventListener("click", (e) => handleClick(e, callbacks));
+  body.addEventListener("submit", (e) => handleSubmit(e, callbacks));
 }
 
 function handleClick(e, callbacks) {
@@ -224,6 +225,31 @@ function handleMenuClick(button) {
     if (!player1NameField.querySelector("input").reportValidity()) return;
   }
   menuStateMachine.send(MENU_EVENTS[button.dataset.event]);
+}
+
+function handleSubmit(e, callbacks) {
+  e.preventDefault();
+  const form = e.target.closest(".menu__form");
+  if (form)
+    handleMenuFormSubmit({
+      event: e,
+      form,
+      onMenuFormSubmit: callbacks.onMenuFormSubmit,
+    });
+}
+
+function handleMenuFormSubmit({ event, form, onMenuFormSubmit }) {
+  const player1Name = form.elements["player1Name"].value;
+  const player2Name = form.elements["player2Name"].value || null;
+  const mode = event.submitter.value;
+
+  onMenuFormSubmit({
+    player1Name,
+    player2Name,
+    mode,
+  });
+
+  menuStateMachine.send(MENU_EVENTS.start);
 }
 
 export function showScreen(screen) {

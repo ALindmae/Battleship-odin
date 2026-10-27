@@ -13,6 +13,7 @@ import {
   renderWinner,
   showScreen,
   SCREENS,
+  openMenu,
 } from "./dom";
 
 const players = {
@@ -23,6 +24,11 @@ const players = {
 const gameState = {
   turn: null,
   winner: null,
+};
+
+const GAME_MODES = {
+  single: "single",
+  multi: "multi",
 };
 
 const announcements = {
@@ -150,16 +156,25 @@ function playGame() {
   }
 }
 
-function initGame() {
-  setUpGame();
+function initGame(payload) {
+  setUpGame(payload);
   showScreen(SCREENS.game);
+  renderBoards();
+
   if (players[gameState.turn].type === PLAYER_TYPES.computer)
     playComputerTurn();
 }
 
-function setUpGame() {
-  players.player1 = new Player({ type: PLAYER_TYPES.human, name: "John" });
-  players.player2 = new Player({ type: PLAYER_TYPES.computer });
+function setUpGame(payload) {
+  players.player1 = new Player({
+    type: PLAYER_TYPES.human,
+    name: `${payload.player1Name}`,
+  });
+
+  switch (payload.mode) {
+    case GAME_MODES.single:
+      players.player2 = new Player({ type: PLAYER_TYPES.computer });
+  }
 
   placeShipsRandomly(players.player1);
   placeShipsRandomly(players.player2);
@@ -168,6 +183,6 @@ function setUpGame() {
   renderAnnouncement(announcements.turn(players[gameState.turn].name));
 }
 
-initGame();
-renderBoards();
-bindEvents({ onSquareClick: playHumanTurn });
+showScreen(SCREENS.menu);
+openMenu();
+bindEvents({ onSquareClick: playHumanTurn, onMenuFormSubmit: initGame });

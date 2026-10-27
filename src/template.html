@@ -16,7 +16,7 @@
             <div class="name-form__field">
               <input
                 type="text"
-                name="player1"
+                name="player1Name"
                 class="name-form__input"
                 aria-label="Player 1 name"
                 placeholder="Enter your name:"
@@ -38,9 +38,10 @@
               aria-labelledby="game-modes-title"
             >
               <button
-                type="button"
+                type="submit"
                 class="game-modes__button"
-                data-event="start"
+                value="single"
+                name="mode"
               >
                 Single player
               </button>
@@ -59,16 +60,16 @@
             <div class="name-form__field">
               <input
                 type="text"
-                name="player2"
+                name="player2Name"
                 class="name-form__input"
                 aria-label="Player 2 name"
                 placeholder="Enter player 2 name:"
               />
               <button
-                type="button"
+                type="submit"
                 class="name-form__submit"
-                data-event="start"
                 aria-label="Start Game"
+                value="multi"
               ></button>
             </div>
           </div>
