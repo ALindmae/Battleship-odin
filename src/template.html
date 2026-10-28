@@ -76,6 +76,7 @@
       </div>
       <div hidden class="game" data-screen="game">
         <div
+          hidden
           class="turn-overlay"
           role="dialog"
           aria-modal="true"
@@ -87,7 +88,9 @@
             alt=""
           />
           <p class="turn-overlay__message" id="turn-overlay-message"></p>
-          <button type="button" class="turn-overlay__button">Start turn</button>
+          <button type="button" class="turn-overlay__button">
+            Start turn!
+          </button>
         </div>
         <div id="announcements">
           <p aria-live="polite" class="game-status"></p>

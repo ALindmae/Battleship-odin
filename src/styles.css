@@ -216,6 +216,39 @@ input {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    position:relative;
+}
+
+.turn-overlay {
+    width: 95%;
+    height: 95%;
+    position: absolute;
+    z-index: 1;
+    border-radius: 15px;
+    background: rgba(var(--color-blue-900), 100);
+    backdrop-filter: blur(100px);
+    -webkit-backdrop-filter: blur(100px);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1.3rem;
+}
+
+.turn-overlay__image {
+    height: auto;
+    height: max(13vw, 16vh)
+}
+
+.turn-overlay__message {
+    font-size: 1.5rem;
+}
+
+.turn-overlay__button {
+    background-color:#30ab67;;
+    padding: 0.7rem 2.2rem;
+    border-radius: 2px;
 }
 
 #announcements {
