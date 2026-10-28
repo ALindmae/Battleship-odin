@@ -75,6 +75,20 @@
         </form>
       </div>
       <div hidden class="game" data-screen="game">
+        <div
+          class="turn-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="turn-overlay-message"
+        >
+          <img
+            class="turn-overlay__image"
+            src="assets/icons/radar.svg"
+            alt=""
+          />
+          <p class="turn-overlay__message" id="turn-overlay-message"></p>
+          <button type="button" class="turn-overlay__button">Start turn</button>
+        </div>
         <div id="announcements">
           <p aria-live="polite" class="game-status"></p>
           <div hidden class="game-controls">
