@@ -167,7 +167,7 @@ function setUpGame(payload) {
   gameState.mode = payload.mode;
   players.player1 = new Player({
     type: PLAYER_TYPES.human,
-    name: `${payload.player1Name}`,
+    name: payload.player1Name.trim(),
   });
 
   switch (payload.mode) {
@@ -177,7 +177,7 @@ function setUpGame(payload) {
     case GAME_MODES.multi:
       players.player2 = new Player({
         type: PLAYER_TYPES.human,
-        name: `${payload.player2Name}`,
+        name: payload.player2Name.trim(),
       });
       break;
   }
