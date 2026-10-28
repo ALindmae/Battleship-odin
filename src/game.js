@@ -173,6 +173,13 @@ function setUpGame(payload) {
   switch (payload.mode) {
     case GAME_MODES.single:
       players.player2 = new Player({ type: PLAYER_TYPES.computer });
+      break;
+    case GAME_MODES.multi:
+      players.player2 = new Player({
+        type: PLAYER_TYPES.human,
+        name: `${payload.player2Name}`,
+      });
+      break;
   }
 
   placeShipsRandomly(players.player1);
