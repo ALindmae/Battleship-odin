@@ -14,6 +14,7 @@ const SLOT_CLASSES = {
 export const SCREENS = {
   menu: "menu",
   game: "game",
+  placement: "placement",
 };
 
 const MENU_STATES = {
