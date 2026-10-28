@@ -74,6 +74,28 @@
           </div>
         </form>
       </div>
+      <div hidden class="ship-placement" data-screen="placement">
+        <p class="ship-placement__title"></p>
+        <div class="ship-placement__setup">
+          <div class="fleet">
+            <p class="fleet__title"></p>
+            <div class="fleet__ships"></div>
+            <div class="fleet__controls">
+              <button type="button" data-action="rotate">Rotate</button>
+              <button type="button" data-action="randomize">
+                Randomize placement
+              </button>
+              <button type="button" data-action="confirmPlacement">
+                Confirm placement
+              </button>
+            </div>
+          </div>
+          <div class="gameboard">
+            <p class="gameboard__title">Your grid</p>
+            <div class="gameboard__slot" data-board="placement"></div>
+          </div>
+        </div>
+      </div>
       <div hidden class="game" data-screen="game">
         <div
           hidden
