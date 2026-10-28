@@ -48,7 +48,7 @@ function getRandomItem(arr) {
 function getShowShips(playerKey) {
   if (gameState.winner) return true;
 
-  gameState.mode === GAME_MODES.single
+  return gameState.mode === GAME_MODES.single
     ? players[playerKey].type === PLAYER_TYPES.human
     : gameState.turn === playerKey;
 }
