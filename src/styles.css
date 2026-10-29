@@ -219,7 +219,7 @@ input {
     position:relative;
 }
 
-.turn-overlay {
+.handofff-overlay {
     width: 95%;
     height: 95%;
     position: absolute;
@@ -236,16 +236,16 @@ input {
     gap: 1.3rem;
 }
 
-.turn-overlay__image {
+.handoff-overlay__image {
     height: auto;
     height: max(13vw, 16vh)
 }
 
-.turn-overlay__message {
+.handoff-overlay__message {
     font-size: 1.5rem;
 }
 
-.turn-overlay__button {
+.handoff-overlay__button {
     background-color:#30ab67;;
     padding: 0.7rem 2.2rem;
     border-radius: 2px;
