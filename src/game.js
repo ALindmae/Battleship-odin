@@ -25,11 +25,19 @@ const gameState = {
   turn: null,
   winner: null,
   mode: null,
+  phase: null,
 };
 
 const GAME_MODES = {
   single: "single",
   multi: "multi",
+};
+
+const GAME_PHASES = {
+  placement: "placement",
+  handoff: "handoff",
+  battle: "battle",
+  over: "over",
 };
 
 const announcements = {
