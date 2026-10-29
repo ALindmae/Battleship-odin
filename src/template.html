@@ -97,21 +97,6 @@
         </div>
       </div>
       <div hidden class="game" data-screen="game">
-        <div
-          hidden
-          class="handoff-overlay"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="handoff-overlay__message"
-        >
-          <img
-            class="handoff-overlay__image"
-            src="assets/icons/radar.svg"
-            alt=""
-          />
-          <p class="handoff-overlay__message"></p>
-          <button class="handoff-overlay__button">Start turn!</button>
-        </div>
         <div id="announcements">
           <p aria-live="polite" class="game-status"></p>
           <div hidden class="game-controls">
@@ -133,6 +118,21 @@
             <div class="gameboard__slot" data-board="player2"></div>
           </div>
         </div>
+      </div>
+      <div
+        hidden
+        class="handoff-overlay"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="handoff-overlay__message"
+      >
+        <img
+          class="handoff-overlay__image"
+          src="assets/icons/radar.svg"
+          alt=""
+        />
+        <p class="handoff-overlay__message"></p>
+        <button class="handoff-overlay__button">Start turn!</button>
       </div>
     </main>
   </body>
