@@ -40,6 +40,17 @@ const GAME_PHASES = {
   over: "over",
 };
 
+const HANDOFF_TEMPLATES = {
+  placement: {
+    message: (name) => `${name} it's time to prepare your fleet.`,
+    buttonText: "Prepare fleet",
+  },
+  battle: {
+    message: (name) => `${name} prepare to attack!`,
+    buttonText: "Start turn!",
+  },
+};
+
 const announcements = {
   winner(name) {
     return `Game Over! ${name} won!`;
