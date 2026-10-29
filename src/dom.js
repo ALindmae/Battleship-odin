@@ -182,6 +182,16 @@ export function renderGameBoard({ board, boardSlot, showShips, isLocked }) {
   slot.replaceChildren(createGridElement({ board, showShips }));
 }
 
+export function renderHandoffOverlay({ message, buttonText }) {
+  const overlay = document.querySelector(".handoff-overlay");
+  const overlayMessage = overlay.querySelector(".handoff-overlay__message");
+  const overlayButton = overlay.querySelector(".handoff-overlay__button");
+
+  overlayMessage.textContent = message;
+  overlayButton.textContent = buttonText;
+  overlay.hidden = false;
+}
+
 export function bindEvents(callbacks) {
   const body = document.body;
 
