@@ -72,6 +72,16 @@ function getShowShips(playerKey) {
     : gameState.turn === playerKey;
 }
 
+function getHandoffPayload() {
+  const kind = bothPlayersFleetsPlaced() ? "battle" : "placement";
+  const template = HANDOFF_TEMPLATES[kind];
+
+  return {
+    message: template.message(players[gameState.turn].name),
+    buttonText: template.buttonText,
+  };
+}
+
 function renderBoards() {
   for (const [key, player] of Object.entries(players)) {
     renderGameBoard({
