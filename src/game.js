@@ -82,6 +82,13 @@ function getHandoffPayload() {
   };
 }
 
+function bothPlayersFleetsPlaced() {
+  return (
+    players.player1.gameboard.isFleetPlaced() &&
+    players.player2.gameboard.isFleetPlaced()
+  );
+}
+
 function renderBoards() {
   for (const [key, player] of Object.entries(players)) {
     renderGameBoard({
