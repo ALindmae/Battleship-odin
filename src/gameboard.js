@@ -37,6 +37,10 @@ export class Gameboard {
     return this.#board;
   }
 
+  isFleetPlaced() {
+    return this.#ships.length === FLEET.length;
+  }
+
   placeShip({ shipLength, coordinates, direction }) {
     if (!PLACEMENT_DIRECTIONS[direction])
       throw new Error("incorrect direction argument passed");
