@@ -14,6 +14,7 @@ import {
   showScreen,
   SCREENS,
   openMenu,
+  renderHandoffOverlay,
 } from "./dom";
 
 const players = {
@@ -223,6 +224,11 @@ function setUpGame(payload) {
 
   gameState.turn = getRandomItem(Object.keys(players));
   renderAnnouncement(announcements.turn(players[gameState.turn].name));
+}
+
+function startHandOff() {
+  gameState.phase = GAME_PHASES.handoff;
+  renderHandoffOverlay(getHandoffPayload);
 }
 
 showScreen(SCREENS.menu);
