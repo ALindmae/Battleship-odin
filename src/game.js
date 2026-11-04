@@ -15,6 +15,7 @@ import {
   SCREENS,
   openMenu,
   renderHandoffOverlay,
+  renderPlacementBoard,
 } from "./dom";
 
 const players = {
@@ -229,6 +230,12 @@ function setUpGame(payload) {
 function startHandOff() {
   gameState.phase = GAME_PHASES.handoff;
   renderHandoffOverlay(getHandoffPayload);
+}
+
+function startPlacement() {
+  gameState.phase = GAME_PHASES.placement;
+  showScreen(SCREENS.placement);
+  renderPlacementBoard(players[gameState.turn].gameboard.board);
 }
 
 showScreen(SCREENS.menu);
