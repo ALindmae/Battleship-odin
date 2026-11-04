@@ -182,6 +182,11 @@ export function renderGameBoard({ board, boardSlot, showShips, isLocked }) {
   slot.replaceChildren(createGridElement({ board, showShips }));
 }
 
+export function renderPlacementBoard(board) {
+  const slot = document.querySelector("[data-board='placement']");
+  slot.replaceChildren(createGridElement({ board, showShips: true }));
+}
+
 export function renderHandoffOverlay({ message, buttonText }) {
   const overlay = document.querySelector(".handoff-overlay");
   const overlayMessage = overlay.querySelector(".handoff-overlay__message");
