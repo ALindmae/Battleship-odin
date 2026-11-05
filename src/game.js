@@ -244,4 +244,5 @@ openMenu();
 bindEvents({
   onSquareClick: playHumanTurn,
   onMenuFormSubmit: initSetup,
+  onRandomizePlacementClick: handleRandomizePlacement,
 });
