@@ -224,9 +224,9 @@ input {
 }
 
 .handoff-overlay {
-    width: 95%;
-    height: 95%;
     position: absolute;
+    inset: 2%;
+    margin: auto;
     z-index: 1;
     border-radius: 15px;
     background: rgba(var(--color-blue-900), 100);
