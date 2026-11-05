@@ -37,6 +37,11 @@ export class Gameboard {
     return this.#board;
   }
 
+  resetBoard() {
+    this.#ships.length = 0;
+    this.#board = this.#createBoard();
+  }
+
   isFleetPlaced() {
     return this.#ships.length === FLEET.length;
   }
