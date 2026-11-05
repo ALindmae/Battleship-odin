@@ -102,6 +102,10 @@ table {
 }
 
 /* STYLES */
+main {
+    position: relative;
+}
+
 .menu {
     background-image: url("./assets/images/menu-hero.png");
     background-size: cover;
