@@ -191,26 +191,23 @@ function playGame() {
   }
 }
 
-function initGame(payload) {
-  setUpGame(payload);
-  showScreen(SCREENS.game);
-  renderBoards();
-  playGame();
-}
-
-function setUpGame(payload) {
+function initSetup(payload) {
   if (!Object.values(GAME_MODES).includes(payload.mode))
     throw new Error(`unknown game mode: ${payload.mode}`);
 
   gameState.mode = payload.mode;
+
   players.player1 = new Player({
     type: PLAYER_TYPES.human,
     name: payload.player1Name.trim(),
   });
 
+  gameState.turn = "player1";
+
   switch (payload.mode) {
     case GAME_MODES.single:
       players.player2 = new Player({ type: PLAYER_TYPES.computer });
+      placeShipsRandomly(players.player2);
       break;
     case GAME_MODES.multi:
       players.player2 = new Player({
@@ -220,11 +217,8 @@ function setUpGame(payload) {
       break;
   }
 
-  placeShipsRandomly(players.player1);
-  placeShipsRandomly(players.player2);
-
-  gameState.turn = getRandomItem(Object.keys(players));
-  renderAnnouncement(announcements.turn(players[gameState.turn].name));
+  if (payload.mode === GAME_MODES.single) startPlacement();
+  else startHandOff();
 }
 
 function startHandOff() {
@@ -240,4 +234,4 @@ function startPlacement() {
 
 showScreen(SCREENS.menu);
 openMenu();
-bindEvents({ onSquareClick: playHumanTurn, onMenuFormSubmit: initGame });
+bindEvents({ onSquareClick: playHumanTurn, onMenuFormSubmit: initSetup });
