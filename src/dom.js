@@ -209,11 +209,19 @@ function handleClick(e, callbacks) {
   const square = e.target.closest(".square");
   const slot = e.target.closest("[data-board]");
   const menuButton = e.target.closest("[data-event]");
+  const actionButton = e.target.closest("[data-action]");
 
   if (square && slot)
     handleSquareClick({ square, slot, onSquareClick: callbacks.onSquareClick });
 
   if (menuButton) handleMenuClick(menuButton);
+
+  if (actionButton) {
+    switch (actionButton.dataset.action) {
+      case "randomize":
+        callbacks.onRandomizePlacementClick();
+    }
+  }
 }
 
 function handleSquareClick({ square, slot, onSquareClick }) {
