@@ -218,10 +218,10 @@ function initSetup(payload) {
   }
 
   if (payload.mode === GAME_MODES.single) startPlacement();
-  else startHandOff();
+  else startHandoff();
 }
 
-function startHandOff() {
+function startHandoff() {
   gameState.phase = GAME_PHASES.handoff;
   renderHandoffOverlay(getHandoffPayload());
 }
