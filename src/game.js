@@ -232,6 +232,16 @@ function startPlacement() {
   renderPlacementBoard(players[gameState.turn].gameboard.board);
 }
 
+function handleRandomizePlacement() {
+  const player = players[gameState.turn];
+  player.gameboard.resetBoard();
+  placeShipsRandomly(player);
+  renderPlacementBoard(player.gameboard.board);
+}
+
 showScreen(SCREENS.menu);
 openMenu();
-bindEvents({ onSquareClick: playHumanTurn, onMenuFormSubmit: initSetup });
+bindEvents({
+  onSquareClick: playHumanTurn,
+  onMenuFormSubmit: initSetup,
+});
