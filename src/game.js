@@ -223,7 +223,7 @@ function initSetup(payload) {
 
 function startHandOff() {
   gameState.phase = GAME_PHASES.handoff;
-  renderHandoffOverlay(getHandoffPayload);
+  renderHandoffOverlay(getHandoffPayload());
 }
 
 function startPlacement() {
