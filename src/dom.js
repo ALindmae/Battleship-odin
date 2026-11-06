@@ -220,6 +220,9 @@ function handleClick(e, callbacks) {
     switch (actionButton.dataset.action) {
       case "randomize":
         callbacks.onRandomizePlacementClick();
+        break;
+      case "confirmPlacement":
+        callbacks.onConfirmPlacementClick();
     }
   }
 }

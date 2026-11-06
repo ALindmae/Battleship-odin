@@ -136,10 +136,7 @@ function resolveAttack(coordinates, opponentKey) {
   const opponent = players[opponentKey];
   const result = opponent.gameboard.receiveAttack(coordinates);
   if (result === ATTACK_RESULTS.rejected) return result;
-  gameState.turn = opponentKey;
-  renderBoards();
-  renderAnnouncement(announcements.turn(opponent.name));
-  playGame();
+  passTurn();
 }
 
 function playHumanTurn(coordinates, opponentKey) {
@@ -173,24 +170,6 @@ function playComputerTurn() {
   }, 1500);
 }
 
-function playGame() {
-  const player1NoShipsLeft = players.player1.gameboard.allShipsSunk();
-  const player2NoShipsLeft = players.player2.gameboard.allShipsSunk();
-
-  if (player1NoShipsLeft || player2NoShipsLeft) {
-    gameState.winner = player1NoShipsLeft ? players.player2 : players.player1;
-    gameState.turn = null;
-    renderWinner(announcements.winner(gameState.winner.name));
-    renderBoards();
-    return;
-  }
-
-  switch (players[gameState.turn].type) {
-    case PLAYER_TYPES.computer:
-      playComputerTurn();
-  }
-}
-
 function initSetup(payload) {
   if (!Object.values(GAME_MODES).includes(payload.mode))
     throw new Error(`unknown game mode: ${payload.mode}`);
@@ -221,6 +200,40 @@ function initSetup(payload) {
   else startHandoff();
 }
 
+function initBattle() {
+  showScreen(SCREENS.game);
+  gameState.turn = getRandomItem(Object.keys(players));
+  if (gameState.mode === GAME_MODES.multi) startHandoff();
+  else startTurn();
+}
+
+function passTurn() {
+  const player1NoShipsLeft = players.player1.gameboard.allShipsSunk();
+  const player2NoShipsLeft = players.player2.gameboard.allShipsSunk();
+
+  if (player1NoShipsLeft || player2NoShipsLeft) {
+    gameState.winner = player1NoShipsLeft ? players.player2 : players.player1;
+    gameState.turn = null;
+    gameState.phase = GAME_PHASES.over;
+    renderWinner(announcements.winner(gameState.winner.name));
+    renderBoards();
+    return;
+  }
+
+  gameState.turn = Object.keys(players).find((key) => key !== gameState.turn);
+
+  if (gameState.mode === GAME_MODES.multi) startHandoff();
+  else startTurn();
+}
+
+function startTurn() {
+  const player = players[gameState.turn];
+  gameState.phase = GAME_PHASES.battle;
+  renderBoards();
+  renderAnnouncement(announcements.turn(player.name));
+  if (player.type === PLAYER_TYPES.computer) playComputerTurn();
+}
+
 function startHandoff() {
   gameState.phase = GAME_PHASES.handoff;
   renderHandoffOverlay(getHandoffPayload());
@@ -239,10 +252,21 @@ function handleRandomizePlacement() {
   renderPlacementBoard(player.gameboard.board);
 }
 
+function handleConfirmPlacement() {
+  // might render an error message later
+  if (!players[gameState.turn].gameboard.isFleetPlaced()) return;
+  if (bothPlayersFleetsPlaced()) initBattle();
+  else {
+    gameState.turn = "player2";
+    startHandoff();
+  }
+}
+
 showScreen(SCREENS.menu);
 openMenu();
 bindEvents({
   onSquareClick: playHumanTurn,
   onMenuFormSubmit: initSetup,
   onRandomizePlacementClick: handleRandomizePlacement,
+  onConfirmPlacementClick: handleConfirmPlacement,
 });
