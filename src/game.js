@@ -16,6 +16,7 @@ import {
   openMenu,
   renderHandoffOverlay,
   renderPlacementBoard,
+  closeHandoffOverlay,
 } from "./dom";
 
 const players = {
@@ -262,6 +263,12 @@ function handleConfirmPlacement() {
   }
 }
 
+function handleConfirmHandoff() {
+  if (bothPlayersFleetsPlaced()) startTurn();
+  else startPlacement();
+  closeHandoffOverlay();
+}
+
 showScreen(SCREENS.menu);
 openMenu();
 bindEvents({
@@ -269,4 +276,5 @@ bindEvents({
   onMenuFormSubmit: initSetup,
   onRandomizePlacementClick: handleRandomizePlacement,
   onConfirmPlacementClick: handleConfirmPlacement,
+  onConfirmHandoffClick: handleConfirmHandoff,
 });

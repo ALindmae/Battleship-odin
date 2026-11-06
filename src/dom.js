@@ -197,6 +197,11 @@ export function renderHandoffOverlay({ message, buttonText }) {
   overlay.hidden = false;
 }
 
+export function closeHandoffOverlay() {
+  const overlay = document.querySelector(".handoff-overlay");
+  overlay.hidden = true;
+}
+
 export function bindEvents(callbacks) {
   const body = document.body;
 
@@ -223,6 +228,10 @@ function handleClick(e, callbacks) {
         break;
       case "confirmPlacement":
         callbacks.onConfirmPlacementClick();
+        break;
+      case "confirmHandoff":
+        callbacks.onConfirmHandoffClick();
+        break;
     }
   }
 }
