@@ -247,14 +247,20 @@ function handleClick(e, callbacks) {
 }
 
 function handleSquareClick({ square, board, onSquareClick }) {
-  const coordinates = [
-    Number(square.dataset.row),
-    Number(square.dataset.column),
-  ];
+  const screenName = board.closest("[data-screen]").dataset.screen;
 
-  const playerKey = board.dataset.board;
+  switch (screenName) {
+    case SCREENS.game:
+      const coordinates = [
+        Number(square.dataset.row),
+        Number(square.dataset.column),
+      ];
 
-  onSquareClick(coordinates, playerKey);
+      const playerKey = board.dataset.board;
+
+      onSquareClick(coordinates, playerKey);
+      break;
+  }
 }
 
 export function renderAnnouncement(text) {
