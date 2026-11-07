@@ -187,7 +187,9 @@ export function renderGameBoard({ board, boardSlot, showShips, isLocked }) {
 }
 
 export function renderPlacementBoard(board) {
-  const slot = document.querySelector("[data-board='placement'] ");
+  const slot = document.querySelector(
+    "[data-board='placement'] .gameboard__slot",
+  );
   slot.replaceChildren(createGridElement({ board, showShips: true }));
 }
 
