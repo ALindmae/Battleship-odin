@@ -142,6 +142,7 @@ function resolveAttack(coordinates, opponentKey) {
 
 function playHumanTurn(coordinates, opponentKey) {
   if (
+    gameState.phase !== GAME_PHASES.battle ||
     !gameState.turn ||
     players[gameState.turn].type === PLAYER_TYPES.computer ||
     gameState.turn === opponentKey
