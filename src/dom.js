@@ -274,6 +274,20 @@ export function renderWinner(text) {
   gameControls.hidden = false;
 }
 
+export function renderGameboardTitle(boardKey, text) {
+  const board = document.querySelector(
+    `[data-screen="game"] [data-board="${boardKey}"]`,
+  );
+
+  if (!board)
+    throw new Error(
+      `no board matching the boardKey = ${boardKey} found: [data-screen="game"] [data-board="${boardKey}"]`,
+    );
+
+  const title = board.querySelector(".gameboard__title");
+  title.textContent = text;
+}
+
 function handleMenuClick(button) {
   const player1NameField = button.closest("[data-step='player1Name']");
   if (player1NameField) {

@@ -17,6 +17,7 @@ import {
   renderHandoffOverlay,
   renderPlacementBoard,
   closeHandoffOverlay,
+  renderGameboardTitle,
 } from "./dom";
 
 const players = {
@@ -100,6 +101,16 @@ function renderBoards() {
       showShips: getShowShips(key),
       isLocked: key === gameState.turn || !!gameState.winner,
     });
+  }
+}
+
+function renderBoardTitles() {
+  let text;
+  for (const key of Object.keys(players)) {
+    if (gameState.mode === GAME_MODES.multi)
+      text = gameState.turn === key ? "Your grid" : "Opponent's grid";
+    else text = key === "player1" ? "Your grid" : "Opponent's grid";
+    renderGameboardTitle(key, text);
   }
 }
 
@@ -232,6 +243,7 @@ function startTurn() {
   const player = players[gameState.turn];
   gameState.phase = GAME_PHASES.battle;
   renderBoards();
+  renderBoardTitles();
   renderAnnouncement(announcements.turn(player.name));
   if (player.type === PLAYER_TYPES.computer) playComputerTurn();
 }
