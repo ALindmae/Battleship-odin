@@ -173,17 +173,21 @@ function createGridElement({ board, showShips }) {
 }
 
 export function renderGameBoard({ board, boardSlot, showShips, isLocked }) {
-  const slot = document.querySelector(`[data-board="${boardSlot}"]`);
-  slot.classList.toggle(SLOT_CLASSES.locked, isLocked);
+  const slot = document.querySelector(
+    `[data-board="${boardSlot}"] .gameboard__slot`,
+  );
+
   if (!slot)
     throw new Error(
       `no matching element found in the DOM: data-board=${boardSlot}`,
     );
+
+  slot.classList.toggle(SLOT_CLASSES.locked, isLocked);
   slot.replaceChildren(createGridElement({ board, showShips }));
 }
 
 export function renderPlacementBoard(board) {
-  const slot = document.querySelector("[data-board='placement']");
+  const slot = document.querySelector("[data-board='placement'] ");
   slot.replaceChildren(createGridElement({ board, showShips: true }));
 }
 
@@ -212,12 +216,16 @@ export function bindEvents(callbacks) {
 
 function handleClick(e, callbacks) {
   const square = e.target.closest(".square");
-  const slot = e.target.closest("[data-board]");
+  const board = e.target.closest("[data-board]");
   const menuButton = e.target.closest("[data-event]");
   const actionButton = e.target.closest("[data-action]");
 
-  if (square && slot)
-    handleSquareClick({ square, slot, onSquareClick: callbacks.onSquareClick });
+  if (square && board)
+    handleSquareClick({
+      square,
+      board,
+      onSquareClick: callbacks.onSquareClick,
+    });
 
   if (menuButton) handleMenuClick(menuButton);
 
@@ -236,12 +244,14 @@ function handleClick(e, callbacks) {
   }
 }
 
-function handleSquareClick({ square, slot, onSquareClick }) {
+function handleSquareClick({ square, board, onSquareClick }) {
   const coordinates = [
     Number(square.dataset.row),
     Number(square.dataset.column),
   ];
-  const playerKey = slot.dataset.board;
+
+  const playerKey = board.dataset.board;
+
   onSquareClick(coordinates, playerKey);
 }
 
