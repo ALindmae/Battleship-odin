@@ -41,6 +41,7 @@ const GAME_PHASES = {
   placement: "placement",
   handoff: "handoff",
   battle: "battle",
+  resolving: "resolving",
   over: "over",
 };
 
@@ -148,7 +149,7 @@ function resolveAttack(coordinates, opponentKey) {
   const opponent = players[opponentKey];
   const result = opponent.gameboard.receiveAttack(coordinates);
   if (result === ATTACK_RESULTS.rejected) return result;
-  passTurn();
+  endTurn();
 }
 
 function playHumanTurn(coordinates, opponentKey) {
@@ -237,6 +238,12 @@ function passTurn() {
 
   if (gameState.mode === GAME_MODES.multi) startHandoff();
   else startTurn();
+}
+
+function endTurn() {
+  gameState.phase = GAME_PHASES.resolving;
+  renderBoards();
+  setTimeout(passTurn, 1200);
 }
 
 function startTurn() {
