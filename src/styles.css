@@ -210,17 +210,33 @@ input {
     background-color: var(--color-blue-900)
 }
 
-.game {
+.ship-placement {
     color: white;
     background-color: var(--color-blue-700);
     height: 700px;
     min-height: fit-content;
     width: 100vw;
+
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    position:relative;
+    justify-content: center;
+}
+
+.ship-placement__title {
+    font-size: 1.5rem;
+    padding: 0.5rem;
+}
+
+.ship-placement__setup {
+    display: flex;
+    gap: 1.5rem;
+}
+
+
+.fleet__controls button {
+    padding: 0.7rem 1.7rem;
+    background-color: var(--color-blue-900)
 }
 
 .handoff-overlay {
@@ -253,6 +269,19 @@ input {
     background-color:#30ab67;;
     padding: 0.7rem 2.2rem;
     border-radius: 2px;
+}
+
+.game {
+    color: white;
+    background-color: var(--color-blue-700);
+    height: 700px;
+    min-height: fit-content;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
 }
 
 #announcements {
