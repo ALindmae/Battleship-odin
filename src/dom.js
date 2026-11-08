@@ -172,6 +172,34 @@ function createGridElement({ board, showShips }) {
   return gridElement;
 }
 
+function createShipElement({ length, type, direction }) {
+  const ship = document.createElement("div");
+  ship.classList.add("ship");
+  ship.classList.add(type);
+  ship.dataset.length = length;
+  ship.dataset.direction = direction;
+
+  for (let i = 0; i < length; i++) {
+    ship.append(document.createElement("div"));
+  }
+
+  return ship;
+}
+
+export function renderFleet(FLEET, direction) {
+  const fleet = document.querySelector(".fleet__ships");
+
+  for (const item of FLEET) {
+    fleet.append(
+      createShipElement({
+        length: item.length,
+        type: item.type,
+        direction,
+      }),
+    );
+  }
+}
+
 export function renderGameBoard({ board, boardSlot, showShips, isLocked }) {
   const slot = document.querySelector(
     `[data-board="${boardSlot}"] .gameboard__slot`,

@@ -18,6 +18,7 @@ import {
   renderPlacementBoard,
   closeHandoffOverlay,
   renderGameboardTitle,
+  renderFleet,
 } from "./dom";
 
 const players = {
@@ -264,6 +265,7 @@ function startPlacement() {
   gameState.phase = GAME_PHASES.placement;
   showScreen(SCREENS.placement);
   renderPlacementBoard(players[gameState.turn].gameboard.board);
+  renderFleet(FLEET, PLACEMENT_DIRECTIONS.vertical);
 }
 
 function handleRandomizePlacement() {
