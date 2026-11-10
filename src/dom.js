@@ -149,6 +149,8 @@ function createSquareElement({ cell, coordinates, showShips }) {
   square.dataset.row = coordinates.row;
   square.dataset.column = coordinates.column;
 
+  if (cell.ship && showShips) square.dataset.shipType = cell.ship.type;
+
   square.classList.add(...getSquareClasses(cell, showShips));
 
   return square;
@@ -178,6 +180,7 @@ function createShipElement({ length, type, direction }) {
   ship.classList.add(type);
   ship.dataset.length = length;
   ship.dataset.direction = direction;
+  ship.dataset.shipType = type;
 
   for (let i = 0; i < length; i++) {
     ship.append(document.createElement("div"));

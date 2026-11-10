@@ -138,7 +138,7 @@ function placeShipsRandomly(player) {
       else throw new Error(`unknown direction: ${direction}`);
 
       placed = player.gameboard.placeShip({
-        shipLength: ship.length,
+        shipType: ship.type,
         coordinates,
         direction,
       });

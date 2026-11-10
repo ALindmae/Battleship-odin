@@ -46,15 +46,19 @@ export class Gameboard {
     return this.#ships.length === FLEET.length;
   }
 
-  placeShip({ shipLength, coordinates, direction }) {
+  placeShip({ shipType, coordinates, direction }) {
     if (!PLACEMENT_DIRECTIONS[direction])
       throw new Error("incorrect direction argument passed");
+
+    const shipLength = getShipLength(shipType);
+
+    if (!shipLength) throw new Error(`unknown ship type: ${shipType}`);
 
     if (!this.#isValidShipPlacement({ shipLength, coordinates, direction }))
       return false;
 
     const [row, column] = coordinates;
-    const ship = new Ship(shipLength);
+    const ship = new Ship(shipType, shipLength);
 
     for (let i = 0; i < shipLength; i++) {
       if (direction === PLACEMENT_DIRECTIONS.horizontal) {
@@ -142,4 +146,8 @@ export class Gameboard {
     }
     return coordinates;
   }
+}
+
+export function getShipLength(type) {
+  return FLEET.find((item) => item.type === type)?.length;
 }

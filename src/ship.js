@@ -1,10 +1,16 @@
 export class Ship {
+  #type;
   #length;
   #hits;
 
-  constructor(length) {
+  constructor(type, length) {
+    this.#type = type;
     this.#length = length;
     this.#hits = 0;
+  }
+
+  get type() {
+    return this.#type;
   }
 
   hit() {
