@@ -191,9 +191,10 @@ function createShipElement({ length, type, direction }) {
 
 export function renderFleet(FLEET, direction) {
   const fleet = document.querySelector(".fleet__ships");
+  const ships = [];
 
   for (const item of FLEET) {
-    fleet.append(
+    ships.push(
       createShipElement({
         length: item.length,
         type: item.type,
@@ -201,6 +202,7 @@ export function renderFleet(FLEET, direction) {
       }),
     );
   }
+  fleet.replaceChildren(...ships);
 }
 
 export function renderGameBoard({ board, boardSlot, showShips, isLocked }) {
