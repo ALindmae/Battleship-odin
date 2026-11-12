@@ -67,7 +67,7 @@ export class Gameboard {
         this.#board[row + i][column].ship = ship;
       }
     }
-    this.#ships.push(ship);
+    this.#ships.push({ ship, startCoordinates: coordinates, direction });
 
     return true;
   }
@@ -91,8 +91,8 @@ export class Gameboard {
   allShipsSunk() {
     if (this.#ships.length === 0) return false;
 
-    for (const ship of this.#ships) {
-      if (!ship.isSunk()) return false;
+    for (const placement of this.#ships) {
+      if (!placement.ship.isSunk()) return false;
     }
     return true;
   }
