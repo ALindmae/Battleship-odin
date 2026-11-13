@@ -291,6 +291,22 @@ function handleConfirmHandoff() {
   closeHandoffOverlay();
 }
 
+function handleShipDrop({ startCoordinates, shipType, direction }) {
+  const player = players[gameState.turn];
+  const isPlaced = player.gameboard.placeShip({
+    coordinates: startCoordinates,
+    shipType: shipType,
+    direction,
+  });
+
+  if (!isPlaced) return;
+
+  console.log("dropping ship");
+
+  // render placement
+  renderPlacementBoard(player.gameboard.board);
+}
+
 showScreen(SCREENS.menu);
 openMenu();
 bindEvents({
@@ -299,4 +315,5 @@ bindEvents({
   onRandomizePlacementClick: handleRandomizePlacement,
   onConfirmPlacementClick: handleConfirmPlacement,
   onConfirmHandoffClick: handleConfirmHandoff,
+  onShipDrop: handleShipDrop,
 });

@@ -157,6 +157,7 @@ input {
      display: none !important;
  }
 
+
 .name-form__submit {
     padding: 1.3rem;
     background-color: var(--color-blue-900);
@@ -242,6 +243,12 @@ input {
     display: flex;
     gap: 2rem;
 }
+
+ .ghost {
+    position: fixed;
+    z-index: 1;
+    pointer-events: none;
+ }
 
 .fleet__ships .ship {
     display: grid;

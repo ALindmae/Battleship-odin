@@ -247,6 +247,7 @@ export function bindEvents(callbacks) {
   body.addEventListener("click", (e) => handleClick(e, callbacks));
   body.addEventListener("submit", (e) => handleSubmit(e, callbacks));
   body.addEventListener("keydown", handleKeydown);
+  body.addEventListener("pointerdown", (e) => handlePointerdown(e, callbacks));
 }
 
 function handleClick(e, callbacks) {
@@ -293,6 +294,103 @@ function handleSquareClick({ square, board, onSquareClick }) {
 
       onSquareClick(coordinates, playerKey);
       break;
+  }
+}
+
+function handlePointerdown(event, callbacks) {
+  const ship = event.target.closest(".fleet__ships .ship");
+  if (ship) handleShipPointerdown({ event, ship, callbacks });
+}
+
+function handleShipPointerdown({ event, ship, callbacks }) {
+  ship.setPointerCapture(event.pointerId);
+
+  setTimeout(() => {
+    if (ship.hasPointerCapture(event.pointerId)) {
+      startShipDrag({ event, ship, callbacks });
+    }
+  }, 100);
+}
+
+function startShipDrag({ event, ship, callbacks }) {
+  const dragState = {
+    pointerId: event.pointerId,
+    shipType: ship.dataset.shipType,
+  };
+
+  const ghostShip = ship.cloneNode(true);
+  const fleet = document.querySelector(".fleet__ships");
+
+  ghostShip.classList.add("ghost");
+  ghostShip.style.left = `${event.clientX}px`;
+  ghostShip.style.top = `${event.clientY}px`;
+
+  fleet.appendChild(ghostShip);
+  ghostShip.setPointerCapture(dragState.pointerId);
+
+  const controller = new AbortController();
+
+  ghostShip.addEventListener(
+    "pointermove",
+    (e) => handleShipDragMove(e, dragState.shipType),
+    { signal: controller.signal },
+  );
+
+  ghostShip.addEventListener(
+    "pointerup",
+    (e) => {
+      handleShipDragEnd({
+        e,
+        shipType: dragState.shipType,
+        direction: ghostShip.dataset.direction,
+        callbacks,
+      });
+
+      controller.abort();
+    },
+    { signal: controller.signal },
+  );
+
+  ghostShip.addEventListener(
+    "pointercancel",
+    () => {
+      ghostShip.remove();
+      controller.abort();
+    },
+    { signal: controller.signal },
+  );
+}
+
+function handleShipDragMove(event, shipType) {
+  const ship = document.querySelector(`.ghost[data-ship-type='${shipType}']`);
+  if (!ship)
+    throw new Error(`No element found in the query with the id: ${shipType}`);
+  ship.style.left = `${event.clientX}px`;
+  ship.style.top = `${event.clientY}px`;
+}
+
+function handleShipDragEnd({ e, shipType, direction, callbacks }) {
+  const ghostShip = document.querySelector(
+    `.ghost[data-ship-type='${shipType}']`,
+  );
+  ghostShip.remove();
+
+  const square = document
+    .elementFromPoint(e.clientX, e.clientY)
+    ?.closest("[data-board='placement'] .square");
+
+  if (!square) {
+    // TODO: render an "invalid drop area" message
+    return;
+  } else {
+    callbacks.onShipDrop({
+      startCoordinates: [
+        Number(square.dataset.row),
+        Number(square.dataset.column),
+      ],
+      shipType,
+      direction,
+    });
   }
 }
 
