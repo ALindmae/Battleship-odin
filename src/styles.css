@@ -250,6 +250,10 @@ input {
     pointer-events: none;
  }
 
+ .ship.placed {
+    visibility: hidden;
+ }
+
 .fleet__ships .ship {
     display: grid;
     height: min-content;

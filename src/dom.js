@@ -174,10 +174,11 @@ function createGridElement({ board, showShips }) {
   return gridElement;
 }
 
-function createShipElement({ length, type, direction }) {
+function createShipElement({ length, type, direction, placed }) {
   const ship = document.createElement("div");
   ship.classList.add("ship");
   ship.classList.add(type);
+  if (placed) ship.classList.add("placed");
   ship.dataset.length = length;
   ship.dataset.direction = direction;
   ship.dataset.shipType = type;
@@ -189,20 +190,14 @@ function createShipElement({ length, type, direction }) {
   return ship;
 }
 
-export function renderFleet(FLEET, direction) {
-  const fleet = document.querySelector(".fleet__ships");
+export function renderFleet(fleet) {
+  const fleetElement = document.querySelector(".fleet__ships");
   const ships = [];
 
-  for (const item of FLEET) {
-    ships.push(
-      createShipElement({
-        length: item.length,
-        type: item.type,
-        direction,
-      }),
-    );
+  for (const item of fleet) {
+    ships.push(createShipElement(item));
   }
-  fleet.replaceChildren(...ships);
+  fleetElement.replaceChildren(...ships);
 }
 
 export function renderGameBoard({ board, boardSlot, showShips, isLocked }) {
@@ -298,7 +293,7 @@ function handleSquareClick({ square, board, onSquareClick }) {
 }
 
 function handlePointerdown(event, callbacks) {
-  const ship = event.target.closest(".fleet__ships .ship");
+  const ship = event.target.closest(".fleet__ships .ship:not(.placed)");
   if (ship) handleShipPointerdown({ event, ship, callbacks });
 }
 

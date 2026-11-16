@@ -37,6 +37,10 @@ export class Gameboard {
     return this.#board;
   }
 
+  get ships() {
+    return [...this.#ships];
+  }
+
   resetBoard() {
     this.#ships.length = 0;
     this.#board = this.#createBoard();

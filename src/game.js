@@ -33,6 +33,10 @@ const gameState = {
   phase: null,
 };
 
+const trayDirections = {};
+
+const SHIP_DIRECTION_DEFAULT = PLACEMENT_DIRECTIONS.vertical;
+
 const GAME_MODES = {
   single: "single",
   multi: "multi",
@@ -78,6 +82,33 @@ function getShowShips(playerKey) {
     : gameState.turn === playerKey;
 }
 
+function getPlacementFleet() {
+  const placementFleet = [];
+  const placedShips = players[gameState.turn].gameboard.ships;
+
+  for (const ship of FLEET) {
+    const placementShip = {
+      type: ship.type,
+      length: ship.length,
+      direction: trayDirections[ship.type],
+      placed: false,
+    };
+
+    const placedShip = placedShips.find(
+      (placement) => placement.ship.type === ship.type,
+    );
+
+    if (placedShip) {
+      placementShip.placed = true;
+      placementShip.direction = placedShip.direction;
+    }
+
+    placementFleet.push(placementShip);
+  }
+
+  return placementFleet;
+}
+
 function getHandoffPayload() {
   const kind = bothPlayersFleetsPlaced() ? "battle" : "placement";
   const template = HANDOFF_TEMPLATES[kind];
@@ -86,6 +117,12 @@ function getHandoffPayload() {
     message: template.message(players[gameState.turn].name),
     buttonText: template.buttonText,
   };
+}
+
+function resetTrayDirections() {
+  FLEET.forEach(
+    (placement) => (trayDirections[placement.type] = SHIP_DIRECTION_DEFAULT),
+  );
 }
 
 function bothPlayersFleetsPlaced() {
@@ -265,7 +302,8 @@ function startPlacement() {
   gameState.phase = GAME_PHASES.placement;
   showScreen(SCREENS.placement);
   renderPlacementBoard(players[gameState.turn].gameboard.board);
-  renderFleet(FLEET, PLACEMENT_DIRECTIONS.vertical);
+  resetTrayDirections();
+  renderFleet(getPlacementFleet());
 }
 
 function handleRandomizePlacement() {
@@ -273,6 +311,7 @@ function handleRandomizePlacement() {
   player.gameboard.resetBoard();
   placeShipsRandomly(player);
   renderPlacementBoard(player.gameboard.board);
+  renderFleet(getPlacementFleet());
 }
 
 function handleConfirmPlacement() {
@@ -301,10 +340,8 @@ function handleShipDrop({ startCoordinates, shipType, direction }) {
 
   if (!isPlaced) return;
 
-  console.log("dropping ship");
-
-  // render placement
   renderPlacementBoard(player.gameboard.board);
+  renderFleet(getPlacementFleet());
 }
 
 showScreen(SCREENS.menu);
