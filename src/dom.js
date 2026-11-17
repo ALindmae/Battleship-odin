@@ -327,7 +327,11 @@ function startShipDrag({ event, ship, callbacks }) {
 
   ghostShip.addEventListener(
     "pointermove",
-    (e) => handleShipDragMove(e, dragState.shipType),
+    (e) =>
+      handleShipDragMove({
+        event: e,
+        ship: ghostShip,
+      }),
     { signal: controller.signal },
   );
 
@@ -336,6 +340,7 @@ function startShipDrag({ event, ship, callbacks }) {
     (e) => {
       handleShipDragEnd({
         e,
+        ship: ghostShip,
         shipType: dragState.shipType,
         direction: ghostShip.dataset.direction,
         callbacks,
@@ -356,19 +361,13 @@ function startShipDrag({ event, ship, callbacks }) {
   );
 }
 
-function handleShipDragMove(event, shipType) {
-  const ship = document.querySelector(`.ghost[data-ship-type='${shipType}']`);
-  if (!ship)
-    throw new Error(`No element found in the query with the id: ${shipType}`);
+function handleShipDragMove({ event, ship }) {
   ship.style.left = `${event.clientX}px`;
   ship.style.top = `${event.clientY}px`;
 }
 
-function handleShipDragEnd({ e, shipType, direction, callbacks }) {
-  const ghostShip = document.querySelector(
-    `.ghost[data-ship-type='${shipType}']`,
-  );
-  ghostShip.remove();
+function handleShipDragEnd({ e, ship, shipType, direction, callbacks }) {
+  ship.remove();
 
   const square = document
     .elementFromPoint(e.clientX, e.clientY)
