@@ -339,7 +339,7 @@ function startShipDrag({ event, ship, callbacks }) {
     "pointerup",
     (e) => {
       handleShipDragEnd({
-        e,
+        event: e,
         ship: ghostShip,
         shipType: dragState.shipType,
         direction: ghostShip.dataset.direction,
@@ -366,11 +366,11 @@ function handleShipDragMove({ event, ship }) {
   ship.style.top = `${event.clientY}px`;
 }
 
-function handleShipDragEnd({ e, ship, shipType, direction, callbacks }) {
+function handleShipDragEnd({ event, ship, shipType, direction, callbacks }) {
   ship.remove();
 
   const square = document
-    .elementFromPoint(e.clientX, e.clientY)
+    .elementFromPoint(event.clientX, event.clientY)
     ?.closest("[data-board='placement'] .square");
 
   if (!square) {
