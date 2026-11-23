@@ -190,6 +190,18 @@ function createShipElement({ length, type, direction, placed }) {
   return ship;
 }
 
+function createGhostShip({ length, type, direction }) {
+  const ship = createShipElement({ length, type, direction });
+  ship.classList.add("ghost");
+
+  return ship;
+}
+
+function positionGhostShip(event, ship) {
+  ship.style.left = `${event.clientX}px`;
+  ship.style.top = `${event.clientY}px`;
+}
+
 export function renderFleet(fleet) {
   const fleetElement = document.querySelector(".fleet__ships");
   const ships = [];
@@ -310,17 +322,13 @@ function handleShipPointerdown({ event, ship, callbacks }) {
 function startShipDrag({ event, ship, callbacks }) {
   const dragState = {
     pointerId: event.pointerId,
-    shipType: ship.dataset.shipType,
   };
 
-  const ghostShip = ship.cloneNode(true);
-  const fleet = document.querySelector(".fleet__ships");
+  const ghostShip = createGhostShip(shipData);
+  positionGhostShip(event, ghostShip);
 
-  ghostShip.classList.add("ghost");
-  ghostShip.style.left = `${event.clientX}px`;
-  ghostShip.style.top = `${event.clientY}px`;
+  body.appendChild(ghostShip);
 
-  fleet.appendChild(ghostShip);
   ghostShip.setPointerCapture(dragState.pointerId);
 
   const controller = new AbortController();
@@ -346,7 +354,7 @@ function startShipDrag({ event, ship, callbacks }) {
         callbacks,
       });
 
-      controller.abort();
+      endShipDrag({ ghostShip, controller });
     },
     { signal: controller.signal },
   );
@@ -354,11 +362,17 @@ function startShipDrag({ event, ship, callbacks }) {
   ghostShip.addEventListener(
     "pointercancel",
     () => {
-      ghostShip.remove();
-      controller.abort();
+      endShipDrag({ ghostShip, controller});
     },
-    { signal: controller.signal },
+    {
+      signal: controller.signal,
+    },
   );
+}
+
+function endShipDrag({ ghostShip, controller }) {
+  ghostShip.remove();
+  controller.abort();
 }
 
 function handleShipDragMove({ event, ship }) {
@@ -366,9 +380,7 @@ function handleShipDragMove({ event, ship }) {
   ship.style.top = `${event.clientY}px`;
 }
 
-function handleShipDragEnd({ event, ship, shipType, direction, callbacks }) {
-  ship.remove();
-
+function handleShipDragEnd({ event, shipType, direction, callbacks }) {
   const square = document
     .elementFromPoint(event.clientX, event.clientY)
     ?.closest("[data-board='placement'] .square");
