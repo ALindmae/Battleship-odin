@@ -64,13 +64,44 @@ export class Gameboard {
     return cells;
   }
 
+  getShipPlacement(type) {
+    const placement = this.#ships.find(
+      (placement) => placement.ship.type === type,
+    );
+    if (!placement) return null;
+
+    return {
+      length: placement.ship.length,
+      direction: placement.direction,
+      startCoordinates: [...placement.startCoordinates],
+    };
+  }
+
+  #isShipAlreadyPlaced(type) {
+    return this.#ships.some((placement) => placement.ship?.type === type);
+  }
+
+  #removeShip(type, cells) {
+    const index = this.#ships.findIndex(
+      (placement) => placement.ship.type === type,
+    );
+
+    if (index !== -1) {
+      this.#ships.splice(index, 1);
+    }
+
+    cells.forEach(([row, column]) => {
+      this.#board[row][column].ship = null;
+    });
+  }
+
   placeShip({ shipType, startCoordinates, direction }) {
     if (!PLACEMENT_DIRECTIONS[direction])
       throw new Error("incorrect direction argument passed");
 
-    const shipLength = getShipLength(shipType);
+    const length = getShipLength(shipType);
 
-    if (!shipLength) throw new Error(`unknown ship type: ${shipType}`);
+    if (!length) throw new Error(`unknown ship type: ${shipType}`);
 
     const cells = this.#getShipCells({
       startCoordinates,
@@ -79,17 +110,15 @@ export class Gameboard {
     });
 
     if (!this.#isValidShipPlacement(cells, shipType)) return false;
+    if (this.#isShipAlreadyPlaced(shipType))
+      this.#removeShip(
+        shipType,
+        this.#getShipCells(this.getShipPlacement(shipType)),
+      );
 
-    const [row, column] = startCoordinates;
-    const ship = new Ship(shipType, shipLength);
+    const ship = new Ship(shipType, length);
 
-    for (let i = 0; i < shipLength; i++) {
-      if (direction === PLACEMENT_DIRECTIONS.horizontal) {
-        this.#board[row][column + i].ship = ship;
-      } else {
-        this.#board[row + i][column].ship = ship;
-      }
-    }
+    cells.forEach(([row, column]) => (this.#board[row][column].ship = ship));
     this.#ships.push({ ship, startCoordinates, direction });
 
     return true;
@@ -140,9 +169,14 @@ export class Gameboard {
     );
   }
 
-  #isValidShipPlacement(cells) {
+  #isValidShipPlacement(cells, shipType) {
     for (const [row, column] of cells) {
-      if (!this.#isOnBoard([row, column]) || this.#board[row][column].ship) return false;
+      if (!this.#isOnBoard([row, column])) return false;
+
+      const ship = this.#board[row][column].ship;
+
+      if (ship && ship.type !== shipType) {
+        return false;
       }
     }
     return true;
