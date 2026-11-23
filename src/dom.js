@@ -320,6 +320,7 @@ function handleShipPointerdown({ event, ship, callbacks }) {
 }
 
 function startShipDrag({ event, ship, callbacks }) {
+  const body = document.querySelector("body");
   const dragState = {
     pointerId: event.pointerId,
   };
