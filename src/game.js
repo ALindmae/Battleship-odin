@@ -161,14 +161,14 @@ function placeShipsRandomly(player) {
     let placed;
     do {
       const direction = getRandomItem(directions);
-      const coordinates = [];
+      const startCoordinates = [];
       if (direction === PLACEMENT_DIRECTIONS.horizontal)
-        coordinates.push(
+        startCoordinates.push(
           Math.floor(Math.random() * BOARD_SIZE.rows),
           Math.floor(Math.random() * (BOARD_SIZE.columns - ship.length + 1)),
         );
       else if (direction === PLACEMENT_DIRECTIONS.vertical)
-        coordinates.push(
+        startCoordinates.push(
           Math.floor(Math.random() * (BOARD_SIZE.rows - ship.length + 1)),
           Math.floor(Math.random() * BOARD_SIZE.columns),
         );
@@ -176,7 +176,7 @@ function placeShipsRandomly(player) {
 
       placed = player.gameboard.placeShip({
         shipType: ship.type,
-        coordinates,
+        startCoordinates,
         direction,
       });
     } while (!placed);
@@ -333,7 +333,7 @@ function handleConfirmHandoff() {
 function handleShipDrop({ startCoordinates, shipType, direction }) {
   const player = players[gameState.turn];
   const isPlaced = player.gameboard.placeShip({
-    coordinates: startCoordinates,
+    startCoordinates,
     shipType: shipType,
     direction,
   });
