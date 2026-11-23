@@ -144,6 +144,26 @@ function getSquareClasses(cell, showShips) {
   return classes;
 }
 
+function getPlacementShipData(ship) {
+  const { shipType: type, direction, length } = ship.dataset;
+
+  return {
+    type,
+    direction: direction,
+    length: Number(length),
+  };
+}
+
+function setShipSquaresLifted(shipType, isLifted) {
+  const placedShipSquares = document.querySelectorAll(
+    `[data-board="placement"] [data-ship-type="${shipType}"]`,
+  );
+
+  placedShipSquares.forEach((square) =>
+    square.classList.toggle("lifted", isLifted),
+  );
+}
+
 function createSquareElement({ cell, coordinates, showShips }) {
   const square = document.createElement("div");
   square.dataset.row = coordinates.row;
@@ -305,8 +325,19 @@ function handleSquareClick({ square, board, onSquareClick }) {
 }
 
 function handlePointerdown(event, callbacks) {
-  const ship = event.target.closest(".fleet__ships .ship:not(.placed)");
-  if (ship) handleShipPointerdown({ event, ship, callbacks });
+  const placementShip = event.target.closest(
+    ".fleet__ships .ship:not(.placed)",
+  );
+  const placedShip = event.target.closest(
+    "[data-board='placement'] .square.ship:not(.lifted)",
+  );
+
+  if (placementShip || placedShip)
+    handleShipPointerdown({
+      event,
+      ship: placementShip || placedShip,
+      callbacks,
+    });
 }
 
 function handleShipPointerdown({ event, ship, callbacks }) {
@@ -314,12 +345,31 @@ function handleShipPointerdown({ event, ship, callbacks }) {
 
   setTimeout(() => {
     if (ship.hasPointerCapture(event.pointerId)) {
-      startShipDrag({ event, ship, callbacks });
+      handleStartShipDrag({ event, ship, callbacks });
     }
   }, 100);
 }
 
-function startShipDrag({ event, ship, callbacks }) {
+function handleStartShipDrag({ event, ship, callbacks }) {
+  if (ship.classList.contains("square")) {
+    const type = ship.dataset.shipType;
+    startShipDrag({
+      event,
+      shipData: callbacks.getPlacedShipData(type),
+      callbacks,
+      onEnter: () => setShipSquaresLifted(type, true),
+      onEnd: () => setShipSquaresLifted(type, false),
+    });
+  } else {
+    startShipDrag({
+      event,
+      shipData: getPlacementShipData(ship),
+      callbacks,
+    });
+  }
+}
+
+function startShipDrag({ event, shipData, callbacks, onEnter, onEnd }) {
   const body = document.querySelector("body");
   const dragState = {
     pointerId: event.pointerId,
@@ -333,6 +383,8 @@ function startShipDrag({ event, ship, callbacks }) {
   ghostShip.setPointerCapture(dragState.pointerId);
 
   const controller = new AbortController();
+
+  onEnter?.();
 
   ghostShip.addEventListener(
     "pointermove",
@@ -349,13 +401,12 @@ function startShipDrag({ event, ship, callbacks }) {
     (e) => {
       handleShipDragEnd({
         event: e,
-        ship: ghostShip,
-        shipType: dragState.shipType,
-        direction: ghostShip.dataset.direction,
+        shipType: shipData.type,
+        direction: shipData.direction,
         callbacks,
       });
 
-      endShipDrag({ ghostShip, controller });
+      endShipDrag({ ghostShip, controller, onEnd });
     },
     { signal: controller.signal },
   );
@@ -363,7 +414,7 @@ function startShipDrag({ event, ship, callbacks }) {
   ghostShip.addEventListener(
     "pointercancel",
     () => {
-      endShipDrag({ ghostShip, controller});
+      endShipDrag({ ghostShip, controller, onEnd });
     },
     {
       signal: controller.signal,
@@ -371,7 +422,8 @@ function startShipDrag({ event, ship, callbacks }) {
   );
 }
 
-function endShipDrag({ ghostShip, controller }) {
+function endShipDrag({ ghostShip, controller, onEnd }) {
+  onEnd?.();
   ghostShip.remove();
   controller.abort();
 }

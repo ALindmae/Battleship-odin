@@ -119,6 +119,16 @@ function getHandoffPayload() {
   };
 }
 
+function getPlacedShipData(type) {
+  const placement = players[gameState.turn].gameboard.getShipPlacement(type);
+
+  return {
+    type,
+    length: placement.length,
+    direction: placement.direction,
+  };
+}
+
 function resetTrayDirections() {
   FLEET.forEach(
     (placement) => (trayDirections[placement.type] = SHIP_DIRECTION_DEFAULT),
@@ -353,4 +363,5 @@ bindEvents({
   onConfirmPlacementClick: handleConfirmPlacement,
   onConfirmHandoffClick: handleConfirmHandoff,
   onShipDrop: handleShipDrop,
+  getPlacedShipData,
 });
