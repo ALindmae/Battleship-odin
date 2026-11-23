@@ -50,6 +50,20 @@ export class Gameboard {
     return this.#ships.length === FLEET.length;
   }
 
+  #getShipCells({ startCoordinates, direction, length }) {
+    const [row, column] = startCoordinates;
+    const cells = [startCoordinates];
+
+    for (let i = 1; i < length; i++) {
+      if (direction === PLACEMENT_DIRECTIONS.horizontal) {
+        cells.push([row, column + i]);
+      } else {
+        cells.push([row + i, column]);
+      }
+    }
+    return cells;
+  }
+
   placeShip({ shipType, startCoordinates, direction }) {
     if (!PLACEMENT_DIRECTIONS[direction])
       throw new Error("incorrect direction argument passed");
@@ -58,8 +72,13 @@ export class Gameboard {
 
     if (!shipLength) throw new Error(`unknown ship type: ${shipType}`);
 
-    if (!this.#isValidShipPlacement({ shipLength, coordinates: startCoordinates, direction }))
-      return false;
+    const cells = this.#getShipCells({
+      startCoordinates,
+      direction,
+      length,
+    });
+
+    if (!this.#isValidShipPlacement(cells, shipType)) return false;
 
     const [row, column] = startCoordinates;
     const ship = new Ship(shipType, shipLength);
@@ -121,21 +140,9 @@ export class Gameboard {
     );
   }
 
-  #isValidShipPlacement({ shipLength, coordinates: [row, column], direction }) {
-    // check if the coordinates are not out of the board or another ship is occupying the coordinates
-    for (let i = 0; i < shipLength; i++) {
-      if (direction === PLACEMENT_DIRECTIONS.horizontal) {
-        if (
-          !this.#isOnBoard([row, column + i]) ||
-          this.#board[row][column + i].ship
-        )
-          return false;
-      } else {
-        if (
-          !this.#isOnBoard([row + i, column]) ||
-          this.#board[row + i][column].ship
-        )
-          return false;
+  #isValidShipPlacement(cells) {
+    for (const [row, column] of cells) {
+      if (!this.#isOnBoard([row, column]) || this.#board[row][column].ship) return false;
       }
     }
     return true;
