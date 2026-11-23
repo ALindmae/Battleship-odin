@@ -25,6 +25,11 @@ body {
     font-family: system-ui, sans-serif;
 }
 
+body.is-dragging {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
 /* Buttons */
 button {
     border: none;

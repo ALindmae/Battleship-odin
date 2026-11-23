@@ -164,6 +164,10 @@ function setShipSquaresLifted(shipType, isLifted) {
   );
 }
 
+function setDragging(active) {
+  document.body.classList.toggle("is-dragging", active);
+}
+
 function createSquareElement({ cell, coordinates, showShips }) {
   const square = document.createElement("div");
   square.dataset.row = coordinates.row;
@@ -385,6 +389,7 @@ function startShipDrag({ event, shipData, callbacks, onEnter, onEnd }) {
   const controller = new AbortController();
 
   onEnter?.();
+  setDragging(true);
 
   ghostShip.addEventListener(
     "pointermove",
@@ -424,6 +429,7 @@ function startShipDrag({ event, shipData, callbacks, onEnter, onEnd }) {
 
 function endShipDrag({ ghostShip, controller, onEnd }) {
   onEnd?.();
+  setDragging(false);
   ghostShip.remove();
   controller.abort();
 }
