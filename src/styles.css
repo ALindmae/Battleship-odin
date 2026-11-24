@@ -241,6 +241,9 @@ input {
     justify-content: center;
 }
 
+.ship-placement__announcement {
+    font-size: 1.2rem;
+    text-align: center;
 }
 
 .ship-placement__setup {
