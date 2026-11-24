@@ -1,3 +1,5 @@
+export { SCREENS, showScreen } from "./navigation";
+
 const SQUARE_CLASSES = {
   square: "square",
   ship: "ship",
@@ -9,12 +11,6 @@ const GRID_CLASSES = ["gameboard__grid"];
 
 const SLOT_CLASSES = {
   locked: "locked",
-};
-
-export const SCREENS = {
-  menu: "menu",
-  game: "game",
-  placement: "placement",
 };
 
 const MENU_STATES = {
@@ -561,14 +557,5 @@ function handleMenuFormEnterKeydown({ event, form }) {
     case MENU_STATES.player2Name:
       form.requestSubmit(button);
       break;
-  }
-}
-
-export function showScreen(screen) {
-  if (!Object.values(SCREENS).includes(screen))
-    throw new Error(`invalid screen variable passed: ${screen}`);
-
-  for (const name of Object.values(SCREENS)) {
-    document.querySelector(`[data-screen="${name}"]`).hidden = name !== screen;
   }
 }
