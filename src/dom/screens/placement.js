@@ -237,16 +237,10 @@ function handleShipDragEnd({ event, shipType, direction, callbacks }) {
     .elementFromPoint(event.clientX, event.clientY)
     ?.closest("[data-board='placement'] .square");
 
-  if (!square) {
-    setPlacementState(PLACEMENT_STATE.placementError);
-    return;
-  }
-
   callbacks.onShipDrop({
-    startCoordinates: [
-      Number(square.dataset.row),
-      Number(square.dataset.column),
-    ],
+    startCoordinates: square
+      ? [Number(square.dataset.row), Number(square.dataset.column)]
+      : null,
     shipType,
     direction,
   });

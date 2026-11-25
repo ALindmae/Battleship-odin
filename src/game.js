@@ -345,6 +345,11 @@ function handleConfirmHandoff() {
 }
 
 function handleShipDrop({ startCoordinates, shipType, direction }) {
+  if (!startCoordinates) {
+    renderPlacementError();
+    return;
+  }
+
   const player = players[gameState.turn];
   const isPlaced = player.gameboard.placeShip({
     startCoordinates,
