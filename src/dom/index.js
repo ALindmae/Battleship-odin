@@ -9,3 +9,8 @@ export {
 } from "./screens/battle";
 export { renderHandoffOverlay, closeHandoffOverlay } from "./overlay";
 export { bindEvents } from "./events.js";
+export {
+  resetPlacementAnnouncement,
+  renderPlacementError,
+  renderIncompleteFleetError,
+} from "./screens/placement";

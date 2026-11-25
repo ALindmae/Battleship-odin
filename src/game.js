@@ -19,6 +19,9 @@ import {
   closeHandoffOverlay,
   renderGameboardTitle,
   renderFleet,
+  resetPlacementAnnouncement,
+  renderPlacementError,
+  renderIncompleteFleetError,
 } from "./dom/index.js";
 
 const players = {
@@ -314,6 +317,7 @@ function startPlacement() {
   renderPlacementBoard(players[gameState.turn].gameboard.board);
   resetTrayDirections();
   renderFleet(getPlacementFleet());
+  resetPlacementAnnouncement();
 }
 
 function handleRandomizePlacement() {
@@ -325,9 +329,9 @@ function handleRandomizePlacement() {
 }
 
 function handleConfirmPlacement() {
-  // might render an error message later
-  if (!players[gameState.turn].gameboard.isFleetPlaced()) return;
-  if (bothPlayersFleetsPlaced()) initBattle();
+  if (!players[gameState.turn].gameboard.isFleetPlaced())
+    renderIncompleteFleetError();
+  else if (bothPlayersFleetsPlaced()) initBattle();
   else {
     gameState.turn = "player2";
     startHandoff();
@@ -348,10 +352,13 @@ function handleShipDrop({ startCoordinates, shipType, direction }) {
     direction,
   });
 
-  if (!isPlaced) return;
-
-  renderPlacementBoard(player.gameboard.board);
-  renderFleet(getPlacementFleet());
+  if (isPlaced) {
+    renderPlacementBoard(player.gameboard.board);
+    renderFleet(getPlacementFleet());
+    resetPlacementAnnouncement();
+  } else {
+    renderPlacementError();
+  }
 }
 
 showScreen(SCREENS.menu);

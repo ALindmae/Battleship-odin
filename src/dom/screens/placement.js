@@ -1,5 +1,56 @@
 import { createShipElement, createGridElement } from "../elements.js";
 
+const PLACEMENT_STATE = {
+  idle: "idle",
+  shipDrag: "shipDrag",
+  placementError: "placementError",
+  incompleteFleet: "incompleteFleet",
+};
+
+const ANNOUNCEMENT_MESSAGES = {
+  [PLACEMENT_STATE.idle]:
+    "Drag and drop ships from the tray onto the grid or randomize placement.",
+  [PLACEMENT_STATE.shipDrag]: "Drop the ship onto a grid square to place it.",
+  [PLACEMENT_STATE.placementError]: "Incorrect placement area, try again!",
+  [PLACEMENT_STATE.incompleteFleet]: "Place all your ships before confirming.",
+};
+
+const TIMED_STATES = [
+  PLACEMENT_STATE.placementError,
+  PLACEMENT_STATE.incompleteFleet,
+];
+
+const PLACEMENT_ERROR_TIMEOUT_MS = 5000;
+let errorTimer = null;
+
+function renderPlacementAnnouncement(text) {
+  document.querySelector(".ship-placement__announcement").textContent = text;
+}
+
+function setPlacementState(next) {
+  clearTimeout(errorTimer);
+  renderPlacementAnnouncement(ANNOUNCEMENT_MESSAGES[next]);
+
+  if (TIMED_STATES.includes(next)) {
+    errorTimer = setTimeout(
+      () => setPlacementState(PLACEMENT_STATE.idle),
+      PLACEMENT_ERROR_TIMEOUT_MS,
+    );
+  }
+}
+
+export function resetPlacementAnnouncement() {
+  setPlacementState(PLACEMENT_STATE.idle);
+}
+
+export function renderPlacementError() {
+  setPlacementState(PLACEMENT_STATE.placementError);
+}
+
+export function renderIncompleteFleetError() {
+  setPlacementState(PLACEMENT_STATE.incompleteFleet);
+}
+
 function getPlacementShipData(ship) {
   const { shipType: type, direction, length } = ship.dataset;
 
@@ -94,6 +145,8 @@ function handleShipPointerdown({ event, ship, callbacks }) {
 }
 
 function handleStartShipDrag({ event, ship, callbacks }) {
+  setPlacementState(PLACEMENT_STATE.shipDrag);
+
   if (ship.classList.contains("square")) {
     const type = ship.dataset.shipType;
     startShipDrag({
@@ -159,6 +212,7 @@ function startShipDrag({ event, shipData, callbacks, onEnter, onEnd }) {
     "pointercancel",
     () => {
       endShipDrag({ ghostShip, controller, onEnd });
+      setPlacementState(PLACEMENT_STATE.idle);
     },
     {
       signal: controller.signal,
@@ -184,18 +238,18 @@ function handleShipDragEnd({ event, shipType, direction, callbacks }) {
     ?.closest("[data-board='placement'] .square");
 
   if (!square) {
-    // TODO: render an "invalid drop area" message
+    setPlacementState(PLACEMENT_STATE.placementError);
     return;
-  } else {
-    callbacks.onShipDrop({
-      startCoordinates: [
-        Number(square.dataset.row),
-        Number(square.dataset.column),
-      ],
-      shipType,
-      direction,
-    });
   }
+
+  callbacks.onShipDrop({
+    startCoordinates: [
+      Number(square.dataset.row),
+      Number(square.dataset.column),
+    ],
+    shipType,
+    direction,
+  });
 }
 
 export function bindPlacementEvents(callbacks) {
