@@ -1,12 +1,16 @@
-import { SCREENS } from "./navigation";
 import { createShipElement, createGridElement } from "./elements";
 import { bindMenuEvents } from "./screens/menu";
-export { SCREENS, showScreen } from "./navigation";
-export { openMenu } from "./screens/menu.js";
+import { bindBattleEvents } from "./screens/battle";
 
-const SLOT_CLASSES = {
-  locked: "locked",
-};
+export { SCREENS, showScreen } from "./navigation";
+export { openMenu } from "./screens/menu";
+// TODO: remove when index.js exists
+export {
+  renderGameBoard,
+  renderGameboardTitle,
+  renderAnnouncement,
+  renderWinner,
+} from "./screens/battle";
 
 function getPlacementShipData(ship) {
   const { shipType: type, direction, length } = ship.dataset;
@@ -54,20 +58,6 @@ export function renderFleet(fleet) {
   fleetElement.replaceChildren(...ships);
 }
 
-export function renderGameBoard({ board, boardSlot, showShips, isLocked }) {
-  const slot = document.querySelector(
-    `[data-board="${boardSlot}"] .gameboard__slot`,
-  );
-
-  if (!slot)
-    throw new Error(
-      `no matching element found in the DOM: data-board=${boardSlot}`,
-    );
-
-  slot.classList.toggle(SLOT_CLASSES.locked, isLocked);
-  slot.replaceChildren(createGridElement({ board, showShips }));
-}
-
 export function renderPlacementBoard(board) {
   const slot = document.querySelector(
     "[data-board='placement'] .gameboard__slot",
@@ -97,19 +87,11 @@ export function bindEvents(callbacks) {
   body.addEventListener("pointerdown", (e) => handlePointerdown(e, callbacks));
 
   bindMenuEvents(callbacks);
+  bindBattleEvents(callbacks);
 }
 
 function handleClick(e, callbacks) {
-  const square = e.target.closest(".square");
-  const board = e.target.closest("[data-board]");
   const actionButton = e.target.closest("[data-action]");
-
-  if (square && board)
-    handleSquareClick({
-      square,
-      board,
-      onSquareClick: callbacks.onSquareClick,
-    });
 
   if (actionButton) {
     switch (actionButton.dataset.action) {
@@ -123,23 +105,6 @@ function handleClick(e, callbacks) {
         callbacks.onConfirmHandoffClick();
         break;
     }
-  }
-}
-
-function handleSquareClick({ square, board, onSquareClick }) {
-  const screenName = board.closest("[data-screen]").dataset.screen;
-
-  switch (screenName) {
-    case SCREENS.game:
-      const coordinates = [
-        Number(square.dataset.row),
-        Number(square.dataset.column),
-      ];
-
-      const playerKey = board.dataset.board;
-
-      onSquareClick(coordinates, playerKey);
-      break;
   }
 }
 
@@ -272,29 +237,4 @@ function handleShipDragEnd({ event, shipType, direction, callbacks }) {
       direction,
     });
   }
-}
-
-export function renderAnnouncement(text) {
-  const gameStatus = document.querySelector(".game-status");
-  gameStatus.textContent = text;
-}
-
-export function renderWinner(text) {
-  renderAnnouncement(text);
-  const gameControls = document.querySelector(".game-controls");
-  gameControls.hidden = false;
-}
-
-export function renderGameboardTitle(boardKey, text) {
-  const board = document.querySelector(
-    `[data-screen="game"] [data-board="${boardKey}"]`,
-  );
-
-  if (!board)
-    throw new Error(
-      `no board matching the boardKey = ${boardKey} found: [data-screen="game"] [data-board="${boardKey}"]`,
-    );
-
-  const title = board.querySelector(".gameboard__title");
-  title.textContent = text;
 }
