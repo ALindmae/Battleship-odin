@@ -19,7 +19,7 @@ import {
   closeHandoffOverlay,
   renderGameboardTitle,
   renderFleet,
-} from "./dom/dom";
+} from "./dom/index.js";
 
 const players = {
   player1: null,
