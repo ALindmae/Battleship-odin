@@ -1,3 +1,4 @@
+import { SCREENS } from "./navigation";
 export { SCREENS, showScreen } from "./navigation";
 
 const SQUARE_CLASSES = {
