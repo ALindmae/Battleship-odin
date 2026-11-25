@@ -1,0 +1,215 @@
+const MENU_STATES = {
+  idle: "idle",
+  player1Name: "player1Name",
+  mode: "mode",
+  player2Name: "player2Name",
+};
+
+const MENU_EVENTS = {
+  setup: "setup",
+  player1Submit: "player1Submit",
+  multiChosen: "multiChosen",
+  start: "start",
+};
+
+const menuStateMachine = {
+  currentState: MENU_STATES.idle,
+  states: {
+    [MENU_STATES.idle]: {
+      entry: {
+        beforeRender: ["resetMenu"],
+        afterRender: [],
+      },
+      on: {
+        [MENU_EVENTS.setup]: {
+          target: MENU_STATES.player1Name,
+        },
+      },
+    },
+    [MENU_STATES.player1Name]: {
+      entry: {
+        beforeRender: [],
+        afterRender: ["preparePlayerNameField"],
+      },
+      on: {
+        [MENU_EVENTS.player1Submit]: {
+          target: MENU_STATES.mode,
+        },
+      },
+    },
+    [MENU_STATES.mode]: {
+      entry: {
+        beforeRender: [],
+        afterRender: [],
+      },
+      on: {
+        [MENU_EVENTS.start]: {
+          target: MENU_STATES.idle,
+        },
+        [MENU_EVENTS.multiChosen]: {
+          target: MENU_STATES.player2Name,
+        },
+      },
+    },
+    [MENU_STATES.player2Name]: {
+      entry: {
+        beforeRender: [],
+        afterRender: ["preparePlayerNameField"],
+      },
+      on: {
+        [MENU_EVENTS.start]: {
+          target: MENU_STATES.idle,
+        },
+      },
+    },
+  },
+
+  send(event) {
+    const transition = this.states[this.currentState].on[event];
+    if (!transition) return;
+    this.transitionInto(transition.target);
+  },
+
+  transitionInto(target) {
+    const menu = document.querySelector(".menu");
+    this.currentState = target;
+
+    this.runEntries({ menu, target, phase: "beforeRender" });
+    this.render(menu);
+    this.runEntries({ menu, target, phase: "afterRender" });
+  },
+
+  render(menu) {
+    for (const step of menu.querySelectorAll("[data-step]")) {
+      step.hidden = step.dataset.step !== this.currentState;
+    }
+  },
+
+  runEntries({ menu, target, phase }) {
+    const actions = this.states[target].entry[phase];
+
+    actions.forEach((action) => {
+      menuStateMachine.entries[action](menu);
+    });
+  },
+
+  entries: {
+    resetMenu(menu) {
+      const inputs = menu.querySelectorAll("input");
+
+      inputs.forEach((input) => {
+        input.required = false;
+        input.value = "";
+      });
+    },
+    preparePlayerNameField(menu) {
+      const playerInput = menu.querySelector(
+        `[data-step="${menuStateMachine.currentState}"] input`,
+      );
+      playerInput.required = true;
+      playerInput.focus();
+    },
+  },
+};
+
+export function openMenu() {
+  menuStateMachine.send(MENU_EVENTS.setup);
+}
+
+function handleClick(e) {
+  const menuButton = e.target.closest("[data-event]");
+
+  if (menuButton) handleMenuButtonClick(menuButton);
+}
+
+function handleMenuButtonClick(button) {
+  const player1NameField = button.closest("[data-step='player1Name']");
+  if (player1NameField) {
+    if (!player1NameField.querySelector("input").reportValidity()) return;
+  }
+  menuStateMachine.send(MENU_EVENTS[button.dataset.event]);
+}
+
+function handleSubmit(e, callbacks) {
+  e.preventDefault();
+
+  const form = e.target.closest(".menu__form");
+
+  if (form)
+    handleMenuFormSubmit({
+      event: e,
+      form,
+      onMenuFormSubmit: callbacks.onMenuFormSubmit,
+    });
+}
+
+function handleMenuFormSubmit({ event, form, onMenuFormSubmit }) {
+  const player1Name = form.elements["player1Name"].value;
+  const player2Name = form.elements["player2Name"].value || null;
+  const mode = event.submitter.value;
+
+  onMenuFormSubmit({
+    player1Name,
+    player2Name,
+    mode,
+  });
+
+  menuStateMachine.send(MENU_EVENTS.start);
+}
+
+function handleKeydown(event) {
+  if (
+    event.key === "Enter" &&
+    !event.ctrlKey &&
+    !event.shiftKey &&
+    !event.altKey &&
+    !event.metaKey
+  ) {
+    handleEnterKeydown(event);
+  }
+}
+
+function handleEnterKeydown(event) {
+  if (menuStateMachine.currentState === MENU_STATES.idle) return;
+
+  const isFocusedElement = event.target !== document.body;
+  const form = event.target.closest(".menu__form");
+
+  if (form) handleMenuFormEnterKeydown({ event, form });
+  if (!isFocusedElement) {
+    if (menuStateMachine.currentState !== MENU_STATES.idle)
+      handleMenuFormEnterKeydown({
+        event,
+        form: document.querySelector(".menu__form"),
+      });
+  }
+}
+
+function handleMenuFormEnterKeydown({ event, form }) {
+  if (event.target.closest("button")) return;
+  event.preventDefault();
+
+  const state = menuStateMachine.currentState;
+  const button = form.querySelector(
+    `[data-step="${state}"] .name-form__submit`,
+  );
+  if (!button) return;
+
+  switch (state) {
+    case MENU_STATES.player1Name:
+      handleMenuButtonClick(button);
+      break;
+
+    case MENU_STATES.player2Name:
+      form.requestSubmit(button);
+      break;
+  }
+}
+
+export function bindMenuEvents(callbacks) {
+  const menu = document.querySelector("[data-screen='menu']");
+
+  menu.addEventListener("click", handleClick);
+  menu.addEventListener("submit", (e) => handleSubmit(e, callbacks));
+  document.addEventListener("keydown", handleKeydown);
+}
